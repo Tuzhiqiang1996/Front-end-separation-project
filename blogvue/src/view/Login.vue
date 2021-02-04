@@ -104,33 +104,34 @@ export default {
           .post("http://localhost:8081/login", options)
           .then((res) => {
             console.log(res);
-            const jwt = res.headers["authorization"];
-            const userInfo = res.data.data;
+            const { code } = res.data;
+            if (code == 200) {
+              console.log(res);
+              const jwt = res.headers["authorization"];
+              const userInfo = res.data.data;
 
-            // // 把数据共享出去
-            this.$store.commit("SET_TOKEN", jwt);
-            this.$store.commit("SET_USERINFO", userInfo);
-            this.$router.push({
-              path: "/home",
-            });
-            // if (res.status === 200) {
-            //   this.$router.push({
-            //     path: "/home",
-            //   });
-            //   this.$store.commit("setName",this.userName);
-            // } else {
-            //   this.$message({
-            //     message: "请输入正确的用户名和密码",
-            //     center: true,
-            //     type: "warning",
-            //   });
-            // }
+              // // 把数据共享出去
+              // this.$store.commit("SET_TOKEN", jwt);
+              // this.$store.commit("SET_USERINFO", userInfo);
+              this.SET_TOKEN(jwt);
+              this.SET_USERINFO(userInfo);
+              this.$router.push({
+                path: "/home",
+              });
+            } else {
+              this.$message({
+                message: res.data.msg,
+                center: true,
+                type: "error",
+              });
+            }
           })
           .catch((err) => {
-            console.error(err);
+            console.error("抛出异常" + err);
           });
       }
     },
+    ...mapMutations({SET_TOKEN:"SET_TOKEN", SET_USERINFO:"SET_USERINFO"}),
   },
 };
 </script>

@@ -4,7 +4,7 @@
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
@@ -20,8 +20,8 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-
 ## 引入 element-ui
+
 ```
 $ npm i element-ui -S
 $ npm install babel-plugin-component -D
@@ -39,8 +39,9 @@ Vue.use(ElementUI);
 ## 安装 axios
 
 ···
- npm install axios
+npm install axios
 ···
+
 ## vue 登录 中使用动画 vue-particles
 
 ```
@@ -89,24 +90,23 @@ clickMode: String类型。默认true。可用的click模式有: "push", "remove"
 ```
 
 ## vuex
+
 ```
 npm i vuex -s
 ```
 
-
 ## 问题
+
 ···
 lang='scss' 报错
 This dependency was not found:
 
-* !!vue-style-loader!css-loader?{"minimize":false,"sourceMap":false}!../../node_modules/vue-loader/lib/style-compiler/index?{"vue":true,"id":"data-v-1d57e5ea","scoped":false,"hasInlineConfig":false}!stylus-loader?{"sourceMap":false}!../../node_modules/vue-loader/lib/selector?type=styles&index=0!./a.vue in ./src/components/a.vue
+- !!vue-style-loader!css-loader?{"minimize":false,"sourceMap":false}!../../node_modules/vue-loader/lib/style-compiler/index?{"vue":true,"id":"data-v-1d57e5ea","scoped":false,"hasInlineConfig":false}!stylus-loader?{"sourceMap":false}!../../node_modules/vue-loader/lib/selector?type=styles&index=0!./a.vue in ./src/components/a.vue
 
 To install it, you can run: npm install --save !!vue-style-loader!css-loader?{"minimize":false,"sourceMap":false}!../../node_modules/vue-loader/lib/style-compiler/index?{"vue":true,"id":"data-v-1d57e5ea","scoped":false,"hasInlineConfig":false}!stylus-loader?{"sourceMap":false}!../../node_modules/vue-loader/lib/selector?type=styles&index=0!./a.vu
 
 1、
 npm install sass-loader --save;
-
-
 
 ···
 
@@ -114,7 +114,7 @@ npm install sass-loader --save;
 
 首先将 favicon.ico 图片放在根目录下，通过以下两种方法使其显示正确。
 
-方法一：修改 index.html 文件
+方法一：修改 >index.html 文件
 
 ```html
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
@@ -149,6 +149,44 @@ new HtmlWebpackPlugin({
 
 修改配置文件后需重启 npm run dev。
 
-### VUE配置启动后自动打开浏览器
+### VUE 配置启动后自动打开浏览器
 
-config/index.js 属性 autoOpenBrowser 配置为true
+config/index.js 属性 autoOpenBrowser 配置为 true
+
+### vuex 使用
+
+```
+<p>{{ userInfo.username }}</p>
+import { mapState,mapMutations } from "vuex";
+ computed: {
+    ...mapState(["userInfo"]),
+  },
+console.log(this.userInfo)//有效
+  muthods:{
+      ...mapMutations({SET_TOKEN:"SET_TOKEN", SET_USERINFO:"SET_USERINFO"}),
+
+  }
+相当于映射成 this.SET_TOKEN(参数);
+```
+### vuex 持久化
+
+> 在 app.vue 中
+```
+created() {
+  //在页面加载时读取sessionStorage里的状态信息
+  if (sessionStorage.getItem("store")) {
+    this.$store.replaceState(
+      Object.assign(
+        {},
+        this.$store.state,
+        JSON.parse(sessionStorage.getItem("store"))
+      )
+    );
+  }
+  //在页面刷新时将vuex里的信息保存到sessionStorage里
+  window.addEventListener("beforeunload", () => {
+    sessionStorage.setItem("store", JSON.stringify(this.$store.state));
+  });
+},
+
+```
