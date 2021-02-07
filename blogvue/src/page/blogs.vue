@@ -1,11 +1,31 @@
 <!-- 详情 -->
 <template>
-  <div class="">
-    <el-card>
-      <p> </p>
-      <h4>{{ title }}</h4>
-      <div>{{ content }}</div>
-    </el-card>
+  <div
+    class=""
+    style="
+      justify-content: center;
+      align-items: center;
+      display: inline-flex;
+      height: 100%;
+      background: #eee;
+    "
+  >
+    <div style="width: 80%">
+      <div style="position: fixed; top: 5%">
+        <el-button
+          type="primary"
+          icon="el-icon-back"
+          circle
+          @click="back"
+        ></el-button>
+      </div>
+      <div>
+        <el-card>
+          <h4>{{ title }}</h4>
+          <div class="cmm-wrappe" v-html="content"></div>
+        </el-card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,7 +49,11 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    back() {
+      this.$router.go(-1);
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     console.log(this.$route.params.blogid);
@@ -40,9 +64,9 @@ export default {
       .then((res) => {
         const { code, data } = res.data;
         if (code == 200) {
-          this.content = data.content;
+          // this.content = data.content;
+          this.content = data.content.replace(/\\n/gm, "<br/>");
           this.title = data.title;
-          console.log(data);
         } else {
           this.$message({
             message: res.data.msg,
@@ -68,4 +92,10 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+.cmm-wrapper {
+  white-space: pre-wrap; //解决的关键就是这一句,
+  line-height: 40px;
+  color: #000032;
+  font-size: 28px; /*px*/
+}
 </style>

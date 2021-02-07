@@ -2,7 +2,7 @@
 <template>
   <div class="">
     <Header />
-    <div class="block">
+    <div style="margin: 0 10%">
       <el-timeline>
         <el-timeline-item
           :timestamp="item.created"
@@ -25,7 +25,7 @@
       </el-timeline>
     </div>
 
-    <div class="block">
+    <div style="margin: 0 10%">
       <el-pagination
         layout="prev, pager, next"
         :total="total"

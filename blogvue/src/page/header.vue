@@ -34,19 +34,19 @@ export default {
   //方法集合
   methods: {
     btn() {
-    //   this.$store.commit("REMOVE_INFO");
-    //   this.$router.push("/");
-        this.$axios
-          .get("http://localhost:8081/logout", {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          })
-          .then((res) => {
-            //   _this.$store.commit("REMOVE_INFO");
-              _this.$router.push("/");
-            console.log("d", res);
-          });
+      this.$store.commit("REMOVE_INFO");
+      this.$router.push("/");
+        // this.$axios
+        //   .get("http://localhost:8081/logout", {
+        //     headers: {
+        //       Authorization: localStorage.getItem("token"),
+        //     },
+        //   })
+        //   .then((res) => {
+        //     this.$store.commit("REMOVE_INFO");
+        //      this.$router.push("/");
+        //     console.log("d", res);
+        //   });
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

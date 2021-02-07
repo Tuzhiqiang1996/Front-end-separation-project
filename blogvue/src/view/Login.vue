@@ -3,7 +3,7 @@
     <div class="layer">
       <div class="some-space">
         <div class="form">
-          <h2>登录许可</h2>
+          <h2>{{ log ? "登录许可" : "注册" }}</h2>
           <div class="item">
             <i class="iconfont icon-user"></i>
             <input
@@ -26,15 +26,44 @@
               placeholder="请输入密码"
             />
           </div>
+          <div v-if="!log">
+            <div class="item">
+              <i class="iconfont icon-password"></i>
+              <input
+                autocomplete="off"
+                type="password"
+                class="input"
+                v-model="avatar"
+                maxlength="20"
+                @keyup.enter="login"
+                placeholder="作者"
+              />
+            </div>
+          </div>
           <el-button
             :plain="true"
             class="loginBtn"
             :disabled="isLoginAble"
             @click="login"
+            v-if="log"
           >
             立即登录
           </el-button>
-          <div class="tip">默认用户名：markerhub ，默认密码：111111</div>
+          <el-button
+            v-else
+            :plain="true"
+            class="loginBtn"
+            :disabled="isLoginAble"
+            @click="regina"
+          >
+            注册
+          </el-button>
+          <div class="tip">
+            <p>默认用户名：markerhub ，默认密码：111111</p>
+            <ediv @click="toggle">
+              <p>{{ log ? "还没账号？" : "已有账号！" }}</p>
+            </ediv>
+          </div>
         </div>
       </div>
     </div>
@@ -75,6 +104,11 @@ export default {
     return {
       userName: "markerhub",
       userPwd: "111111",
+      log: true,
+      avatar: null,
+      email: "",
+      status: null,
+      created: null,
     };
   },
   computed: {
@@ -118,6 +152,11 @@ export default {
               this.$router.push({
                 path: "/home",
               });
+              this.$message({
+                message: "登录成功！",
+                showClose: true,
+                type: "success",
+              });
             } else {
               this.$message({
                 message: res.data.msg,
@@ -131,7 +170,21 @@ export default {
           });
       }
     },
-    ...mapMutations({SET_TOKEN:"SET_TOKEN", SET_USERINFO:"SET_USERINFO"}),
+    ...mapMutations({ SET_TOKEN: "SET_TOKEN", SET_USERINFO: "SET_USERINFO" }),
+    regina() {
+      // http://localhost:8081/user/save
+      //     "id": null,
+      // "username": "markerHub1",
+      // "avatar": null,
+      // "email": "16202222@qq.com",
+      // "password": "123456",
+      // "status": null,
+      // "created": null,
+      // "lastLogin": null
+    },
+    toggle() {
+      this.log = !this.log;
+    },
   },
 };
 </script>
@@ -223,6 +276,8 @@ export default {
       .tip {
         font-size: 12px;
         padding-top: 20px;
+        display: flex;
+        justify-content: space-between;
       }
     }
   }

@@ -23,5 +23,11 @@ export default {
 }
 body {
   overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+html {
+  height: 100%;
 }
 </style>
