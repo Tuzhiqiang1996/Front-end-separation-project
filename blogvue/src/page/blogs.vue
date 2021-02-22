@@ -8,8 +8,24 @@
       display: inline-flex;
       height: 100%;
       background: #eee;
+      width: 100%;
+      flex-direction: column;
     "
   >
+    <div class="top">
+      <el-link icon="el-icon-edit">
+        <router-link :to="{ name: 'editblogid', params: { blogId: id } }">
+          编辑
+        </router-link>
+      </el-link>
+      <el-button
+        type="danger"
+        style="style=    margin-left: 10px;"
+        icon="el-icon-delete"
+        circle
+         @click="btndelete"
+      ></el-button>
+    </div>
     <div style="width: 80%">
       <div style="position: fixed; top: 5%">
         <el-button
@@ -40,6 +56,7 @@ export default {
   data() {
     //这里存放数据
     return {
+      id: "",
       content: "",
       title: "",
     };
@@ -53,12 +70,23 @@ export default {
     back() {
       this.$router.go(-1);
     },
+    btndelete(){
+      let url = "http://localhost:8081/delete/";
+       this.$axios.delete(url+this.id)
+       .then(res => {
+         console.log(res)
+       })
+       .catch(err => {
+         console.error(err);
+       })
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     console.log(this.$route.params.blogid);
     let url = "http://localhost:8081/blog/";
     let id = this.$route.params.blogid;
+    this.id = id;
     this.$axios
       .get(url + id)
       .then((res) => {
@@ -97,5 +125,10 @@ export default {
   line-height: 40px;
   color: #000032;
   font-size: 28px; /*px*/
+}
+.top {
+  display: flex;
+  padding: 10px;
+  width: 80%;
 }
 </style>

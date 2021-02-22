@@ -1,12 +1,19 @@
 <!-- 头部 -->
 <template>
-  <div class="">
+  <div class="header">
     <div class="user">
       <h3>欢迎来到</h3>
       <p>{{ userInfo.username }}</p>
       <h3>的博客</h3>
-      <el-button type="danger" icon="el-icon-delete" circle @click="btn">
+    </div>
+
+    <div class="user">
+      <el-button @click="main"> 主页 </el-button>
+      <el-button @click="edit">
+        <el-link type="success" href="/edits">发表博客</el-link>
       </el-button>
+
+      <el-button @click="btn"> 登出 </el-button>
     </div>
   </div>
 </template>
@@ -34,19 +41,25 @@ export default {
   //方法集合
   methods: {
     btn() {
-      this.$store.commit("REMOVE_INFO");
-      this.$router.push("/");
-        // this.$axios
-        //   .get("http://localhost:8081/logout", {
-        //     headers: {
-        //       Authorization: localStorage.getItem("token"),
-        //     },
-        //   })
-        //   .then((res) => {
-        //     this.$store.commit("REMOVE_INFO");
-        //      this.$router.push("/");
-        //     console.log("d", res);
-        //   });
+      // this.$store.commit("REMOVE_INFO");
+      // this.$router.push("/");
+      this.$axios
+        .get("http://localhost:8081/logout", {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          this.$store.commit("REMOVE_INFO");
+          this.$router.push("/");
+          console.log("d", res);
+        });
+    },
+    main() {
+      this.$router.push("/home");
+    },
+    edit(e) {
+      this.$router.push("/edits");
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -66,6 +79,9 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+.header {
+  padding: 20px 0 20px 0;
+}
 .user {
   display: flex;
   justify-content: center;

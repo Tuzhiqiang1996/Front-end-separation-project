@@ -190,3 +190,14 @@ created() {
 },
 
 ```
+
+## 启动Redis
+```
+redis-server.exe
+```
+## 安装mavon-editor
+基于Vue的markdown编辑器mavon-editor
+
+cnpm install mavon-editor --save
+## 用于解析md文档
+cnpm install markdown-it --save

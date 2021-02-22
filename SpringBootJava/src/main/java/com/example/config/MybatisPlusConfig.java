@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Tu
  * @Package com.example.config
  * @date 2021/1/29-17:23
+ * PaginationInterceptor是一个分页插件
  */
 @Configuration
 @EnableTransactionManagement

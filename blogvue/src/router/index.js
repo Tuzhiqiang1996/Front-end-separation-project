@@ -17,9 +17,30 @@ const routes = [
     }
   },
   {
+    path: "/edit/:blogid/edit",
+    name: "editblogid",
+    component: resolve => require(["@/page/blogsedit.vue"], resolve),
+    meta: {
+      requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+    }
+  },
+  {
+    path: "/edits",
+    name: "edit",
+    component: resolve => require(["@/page/blogsedit.vue"], resolve),
+    meta: {
+      requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+    }
+  },
+  {
     path: "/blogs/:blogid",
     name: "blogId",
     component: resolve => require(["@/page/blogs.vue"], resolve)
+  },
+  {
+    path: "/editchange",
+    name: "editchange",
+    component: resolve => require(["@/page/editchange.vue"], resolve)
   },
   {
     path: "*",
@@ -37,6 +58,11 @@ const router = new Router({
   routes
 });
 
+//避免重复跳转产生问题
+const VueRouterPush = Router.prototype.push;
+Router.prototype.push = function push(to) {
+  return VueRouterPush.call(this, to).catch(err => err);
+};
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     // 判断该路由是否需要登录权限

@@ -12,6 +12,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "element-ui": "^2.15.0",
+    "markdown-it": "^12.0.4",
+    "mavon-editor": "^2.9.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.6.2"

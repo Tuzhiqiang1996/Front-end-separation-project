@@ -8,6 +8,10 @@ import ElementUI from "element-ui";
 import store from "./store/store";
 import "element-ui/lib/theme-chalk/index.css";
 import VueParticles from "vue-particles";
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
+Vue.use(mavonEditor)
 Vue.use(VueParticles);
 Vue.use(ElementUI);
 Vue.config.productionTip = false;

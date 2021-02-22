@@ -70,6 +70,11 @@ public class AccountController {
         );
     }
 
+    /**
+     * 登出接口
+     *
+     * @return
+     */
     @RequiresAuthentication
     @GetMapping("/logout")
     public Result logout() {

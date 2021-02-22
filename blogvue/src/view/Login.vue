@@ -31,12 +31,24 @@
               <i class="iconfont icon-password"></i>
               <input
                 autocomplete="off"
-                type="password"
+                type="text"
                 class="input"
                 v-model="avatar"
                 maxlength="20"
-                @keyup.enter="login"
+                @keyup.enter="regina"
                 placeholder="作者"
+              />
+            </div>
+              <div class="item">
+              <i class="iconfont icon-password"></i>
+              <input
+                autocomplete="off"
+                type="email"
+                class="input"
+                v-model="email"
+                maxlength="20"
+                @keyup.enter="regina"
+                placeholder="请输入邮箱"
               />
             </div>
           </div>
@@ -60,9 +72,9 @@
           </el-button>
           <div class="tip">
             <p>默认用户名：markerhub ，默认密码：111111</p>
-            <ediv @click="toggle">
+            <div @click="toggle">
               <p>{{ log ? "还没账号？" : "已有账号！" }}</p>
-            </ediv>
+            </div>
           </div>
         </div>
       </div>
