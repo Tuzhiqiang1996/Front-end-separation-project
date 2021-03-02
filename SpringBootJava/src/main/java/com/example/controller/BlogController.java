@@ -3,21 +3,26 @@ package com.example.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.common.dto.LoginDto;
 import com.example.common.lang.Result;
 import com.example.entity.Blog;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.entity.User;
 import com.example.service.BlogService;
+import com.example.service.UserService;
+import com.example.util.IpUtil;
 import com.example.util.ShiroUtil;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.util.Assert;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * <p>
@@ -27,11 +32,12 @@ import java.util.Map;
  * @author
  * @since 2021-01-29
  */
-
 @RestController
 public class BlogController {
     @Autowired
     BlogService blogService;
+    @Autowired
+    UserService userService;
 
     @GetMapping("/blogs")
     public Result blogs(Integer currentPage) {
@@ -44,7 +50,7 @@ public class BlogController {
     }
 
     @GetMapping("/blog/{id}")
-    public Result detail(@PathVariable(name = "id") Long id) {
+    public Result detail(@PathVariable(name = "id") Long id ) {
         Blog blog = blogService.getById(id);
         Assert.notNull(blog, "该博客已删除！");
         return Result.succ(blog);
@@ -53,9 +59,10 @@ public class BlogController {
     @RequiresAuthentication
     @PostMapping("/blog/edit")
     public Result edit(@Validated @RequestBody Blog blog) {
-        System.out.println(blog.toString());
-        System.out.println("输入中...");
+        // System.out.println(blog.toString());
+        //System.out.println("输入中...");
         Blog temp = null;
+
         /**
          * @date 2021/2/21-11:37
          * 不知道声明错
@@ -76,10 +83,10 @@ public class BlogController {
         temp.setUserId(ShiroUtil.getProfile().getId());
         temp.setCreated(LocalDateTime.now());
         temp.setStatus(0);
-        //System.out.println("编辑中...");
+        // System.out.println("编辑中...");
 
         BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
-        //System.out.println(blog+ ""+temp);
+        System.out.println(blog + "" + temp);
         blogService.saveOrUpdate(temp);
         return Result.succ("操作成功", null);
     }
@@ -90,12 +97,32 @@ public class BlogController {
      * @param id
      * @return
      */
-    @DeleteMapping("delete/{id}")
-    public Result deleteBlog(@PathVariable(name ="id") Long id) {
-        System.out.println(id);
-        Blog blog = blogService.getById(id);
-        System.out.println(blog);
 
+
+    @ResponseBody
+    @DeleteMapping("delete/{id}")
+    public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request) {
+
+
+        HttpSession session = request.getSession();
+        System.out.println(session.getAttribute("phone"));
+
+//        User user = (User) SecurityUtils.getSubject().getPrincipal();
+//        System.out.println(user);
+
+
+        //
+
+
+        System.out.println(id);
+
+        Blog blog = blogService.getById(id);
+        System.out.println(blog.getStatus());
+
+
+        //blogService.delete(id);
+
+        //blogService.removeById(id);
         return Result.succ("操作成功", null);
     }
 

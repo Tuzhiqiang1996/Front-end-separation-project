@@ -10,6 +10,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import VueParticles from "vue-particles";
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+axios.defaults.baseURL = 'http://localhost:8081/'; // 填写后台请求统一的地址
 
 Vue.use(mavonEditor)
 Vue.use(VueParticles);

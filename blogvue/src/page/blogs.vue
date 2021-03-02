@@ -20,10 +20,10 @@
       </el-link>
       <el-button
         type="danger"
-        style="style=    margin-left: 10px;"
+        style="margin-left: 10px;"
         icon="el-icon-delete"
         circle
-         @click="btndelete"
+        @click="btndelete"
       ></el-button>
     </div>
     <div style="width: 80%">
@@ -70,16 +70,33 @@ export default {
     back() {
       this.$router.go(-1);
     },
-    btndelete(){
+    btndelete() {
       let url = "http://localhost:8081/delete/";
-       this.$axios.delete(url+this.id)
-       .then(res => {
-         console.log(res)
-       })
-       .catch(err => {
-         console.error(err);
-       })
-    }
+      this.$axios
+        .delete(url + this.id)
+        .then((res) => {
+          console.log(res);
+          if (res.data.code == 200) {
+            this.$router.push({
+              path: "/home",
+            });
+            this.$message({
+              message: "删除成功！",
+              showClose: true,
+              type: "success",
+            });
+          }else{
+             this.$message({
+              message: "删除失败！",
+              showClose: true,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

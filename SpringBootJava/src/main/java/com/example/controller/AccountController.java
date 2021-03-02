@@ -11,24 +11,35 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.dto.LoginDto;
 import com.example.common.lang.Result;
+import com.example.entity.Blog;
 import com.example.entity.User;
 import com.example.service.UserService;
 import com.example.util.JwtUtils;
+import com.example.util.coolutil;
+import lombok.Data;
+import org.apache.logging.log4j.util.Base64Util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 /**
  * 登录接口
  */
+@Data
 @RestController
+
 public class AccountController {
     @Autowired
     UserService userService;
@@ -37,10 +48,9 @@ public class AccountController {
 
     @ResponseBody
     @PostMapping("/login")
-    public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
+    public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response,HttpServletRequest request ) {
         User user = userService.getOne(new QueryWrapper<User>().eq("userName", loginDto.getUsername()));
 
-//        Assert.notNull(user, "用户不存在");
 /**
  *出现错误 及时 return
  */
@@ -60,12 +70,17 @@ public class AccountController {
 
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
-
+/**
+ * 登录成功后 用户信息会保存在session中
+ */
+        HttpSession session = request.getSession();
+        session.setAttribute("phone", user.getUsername());
         return Result.succ(MapUtil.builder()
                 .put("id", user.getId())
                 .put("username", user.getUsername())
                 .put("avatar", user.getAvatar())
                 .put("email", user.getEmail())
+                .put("status", user.getStatus())
                 .map()
         );
     }
@@ -83,5 +98,24 @@ public class AccountController {
         return Result.succ(null);
     }
 
+    /**
+     * 注册功能
+     * Regina
+     */
+    @ResponseBody
+    @PostMapping("/regina")
+    public Result regina(@Validated @RequestBody User user) {
+        User userRegina = null;
+        userRegina = new User();
+        //加密
+        String pass = user.getPassword();
+        userRegina.setUsername(user.getUsername());
+        userRegina.setPassword(SecureUtil.md5(pass));
+        userRegina.setCreated(LocalDateTime.now());
+        userRegina.setStatus(0);
+        userService.saveOrUpdate(userRegina);
+
+        return Result.succ("注册成功！");
+    }
 
 }

@@ -18,7 +18,7 @@
           <el-input type="textarea" v-model="ruleForm.description"></el-input>
         </el-form-item>
 
-        <el-form-item label="内容" prop="">
+        <el-form-item label="内容" prop="content">
           <mavon-editor v-model="ruleForm.content"></mavon-editor>
         </el-form-item>
         <el-form-item>
@@ -44,7 +44,7 @@ export default {
     //这里存放数据
     return {
       ruleForm: {
-        id: "67",
+        id: "97",
         title: "",
         description: "",
         content: "",

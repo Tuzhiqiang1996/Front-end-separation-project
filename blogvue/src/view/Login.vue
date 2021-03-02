@@ -1,75 +1,86 @@
+
 <template>
   <div class="login-container">
     <div class="layer">
       <div class="some-space">
         <div class="form">
           <h2>{{ log ? "登录许可" : "注册" }}</h2>
-          <div class="item">
-            <i class="iconfont icon-user"></i>
-            <input
-              autocomplete="off"
-              type="text"
-              class="input"
-              v-model="userName"
-              placeholder="请输入用户名"
-            />
-          </div>
-          <div class="item">
-            <i class="iconfont icon-password"></i>
-            <input
-              autocomplete="off"
-              type="password"
-              class="input"
-              v-model="userPwd"
-              maxlength="20"
-              @keyup.enter="login"
-              placeholder="请输入密码"
-            />
-          </div>
-          <div v-if="!log">
+
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+            <div class="item">
+              <i class="iconfont icon-user"></i>
+              <el-form-item prop="userName" class="itemwidth">
+                <el-input
+                  autocomplete="off"
+                  type="text"
+                  class="input"
+                  v-model="ruleForm.userName"
+                  placeholder="请输入用户名"
+              /></el-form-item>
+            </div>
             <div class="item">
               <i class="iconfont icon-password"></i>
-              <input
-                autocomplete="off"
-                type="text"
-                class="input"
-                v-model="avatar"
-                maxlength="20"
-                @keyup.enter="regina"
-                placeholder="作者"
-              />
+              <el-form-item prop="userPwd" class="itemwidth">
+                <el-input
+                  autocomplete="off"
+                  type="password"
+                  class="input"
+                  v-model="ruleForm.userPwd"
+                  maxlength="20"
+                  @keyup.enter="login"
+                  placeholder="请输入密码"
+              /></el-form-item>
             </div>
+            <div v-if="!log">
               <div class="item">
-              <i class="iconfont icon-password"></i>
-              <input
-                autocomplete="off"
-                type="email"
-                class="input"
-                v-model="email"
-                maxlength="20"
-                @keyup.enter="regina"
-                placeholder="请输入邮箱"
-              />
+                <i class="iconfont icon-password"></i>
+                <el-form-item prop="avatar" class="itemwidth">
+                  <el-input
+                    autocomplete="off"
+                    type="text"
+                    class="input"
+                    v-model="ruleForm.avatar"
+                    maxlength="20"
+                    @keyup.enter="regina"
+                    placeholder="作者"
+                /></el-form-item>
+              </div>
+
+              <div class="item">
+                <i class="iconfont icon-password"></i>
+                <el-form-item prop="email" class="itemwidth">
+                  <el-input
+                    autocomplete="off"
+                    type="email"
+                    class="input"
+                    v-model="ruleForm.email"
+                    maxlength="20"
+                    @keyup.enter="regina"
+                    placeholder="请输入邮箱"
+                  />
+                </el-form-item>
+              </div>
             </div>
-          </div>
-          <el-button
-            :plain="true"
-            class="loginBtn"
-            :disabled="isLoginAble"
-            @click="login"
-            v-if="log"
-          >
-            立即登录
-          </el-button>
-          <el-button
-            v-else
-            :plain="true"
-            class="loginBtn"
-            :disabled="isLoginAble"
-            @click="regina"
-          >
-            注册
-          </el-button>
+            <el-button
+              :plain="true"
+              class="loginBtn"
+              :disabled="isLoginAble"
+              @click="login('ruleForm')"
+              v-if="log"
+            >
+              立即登录
+            </el-button>
+            <el-button
+              v-else
+              :plain="true"
+              class="loginBtn"
+              :disabled="isLoginAble"
+              @click="regina('ruleForm')"
+            >
+              注册
+            </el-button>
+          </el-form>
+
           <div class="tip">
             <p>默认用户名：markerhub ，默认密码：111111</p>
             <div @click="toggle">
@@ -113,14 +124,45 @@ export default {
     BgAnimation,
   },
   data() {
+    var validatoremail = (rule, value, callback) => {
+      var MobileRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (value === "") {
+        callback(new Error("请输入正确的邮箱"));
+      } else if (!MobileRegex.test(value)) {
+        callback(new Error("请输入正确的邮箱格式"));
+      } else {
+        callback();
+      }
+    };
     return {
-      userName: "markerhub",
-      userPwd: "111111",
       log: true,
-      avatar: null,
-      email: "",
-      status: null,
-      created: null,
+      ruleForm: {
+        userName: "markerhub",
+        userPwd: "111111",
+        avatar: null,
+        email: "",
+        status: null,
+        created: null,
+      },
+      rules: {
+        //全部效验吧
+        email: [
+          {
+            // validator: validatoremail,
+            trigger: "blur",
+          },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"],
+          },
+          { required: true, message: "请输入正确的邮箱格式", trigger: "blur" },
+        ],
+        userName: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+        ],
+        userPwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
+      },
     };
   },
   computed: {
@@ -130,24 +172,26 @@ export default {
   },
   created() {},
   mounted() {},
+  watch: {
+    log: function (newVal, oldVal) {
+      console.log(newVal, oldVal);
+      this.ruleForm.userName = newVal ? "markerhub" : "";
+      this.ruleForm.userPwd = newVal ? "111111" : "";
+    },
+  },
   methods: {
-    login() {
-      if (this.userName !== "markerhub" && this.userPwd !== "111111") {
-        this.$message({
-          message: "请输入正确的用户名和密码",
-          center: true,
-          type: "error",
-        });
-        console.log(this.userName, this.userPwd);
-      } else {
+    login(formName) {
+        this.$refs[formName].validate((valid) => {
+        if (valid) {
+
         //正确的账号: doudou  密码:123456
         let url = "http://101.96.128.94:9999/data/user/login.php";
         let options = {
-          username: this.userName,
-          password: this.userPwd,
+          username: this.ruleForm.userName,
+          password: this.ruleForm.userPwd,
         };
         this.$axios
-          .post("http://localhost:8081/login", options)
+          .post("/login", options)
           .then((res) => {
             console.log(res);
             const { code } = res.data;
@@ -180,22 +224,53 @@ export default {
           .catch((err) => {
             console.error("抛出异常" + err);
           });
-      }
+
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+
+
     },
     ...mapMutations({ SET_TOKEN: "SET_TOKEN", SET_USERINFO: "SET_USERINFO" }),
-    regina() {
-      // http://localhost:8081/user/save
-      //     "id": null,
-      // "username": "markerHub1",
-      // "avatar": null,
-      // "email": "16202222@qq.com",
-      // "password": "123456",
-      // "status": null,
-      // "created": null,
-      // "lastLogin": null
+    regina(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
+        if (valid) {
+          let options = {
+            username: this.ruleForm.userName,
+            password: this.ruleForm.userPwd,
+            avatar: this.ruleForm.avatar,
+            email: this.ruleForm.email,
+          };
+          this.$axios
+            .post("/regina", options)
+            .then((res) => {
+              const { code } = res.data;
+            if (code == 200) {
+                 this.$router.push({
+                path: "/",
+              });
+              this.$message({
+                message: "注册成功！",
+                showClose: true,
+                type: "success",
+              });
+            }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     toggle() {
       this.log = !this.log;
+      this.userName = "";
+      this.userPwd = "";
     },
   },
 };
@@ -245,12 +320,24 @@ export default {
       .item {
         display: flex;
         align-items: center;
-        margin-bottom: 25px;
+        // margin-bottom: 25px;
         border-bottom: 1px solid #d3d7f7;
+        height: 70px;
         i {
           color: #d3d7f7;
           margin-right: 10px;
         }
+        .itemwidth {
+          width: 100%;
+          >>> .el-form-item {
+            margin: 0;
+          }
+        }
+      }
+      .input >>> .el-input__inner {
+        background-color: transparent !important ;
+        border: 0;
+        color: #fff !important;
       }
       h2 {
         text-align: center;
@@ -267,7 +354,7 @@ export default {
         outline: none;
         border: none;
         background-color: rgba(0, 0, 0, 0);
-        padding: 10px 0;
+        // padding: 15px 0;
       }
       .loginBtn {
         width: 100%;
@@ -278,7 +365,7 @@ export default {
         cursor: pointer;
         background: transparent;
         border-radius: 4px;
-        margin-top: 10px;
+        margin-top: 30px;
         &:hover {
           color: #fff;
           background: #0090ff;
