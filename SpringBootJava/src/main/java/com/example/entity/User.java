@@ -39,7 +39,6 @@ public class User implements Serializable {
     private String email;
 
     private String password;
-
     private Integer status;
 
     private LocalDateTime created;

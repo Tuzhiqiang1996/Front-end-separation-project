@@ -48,19 +48,19 @@ public class AccountController {
 
     @ResponseBody
     @PostMapping("/login")
-    public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response,HttpServletRequest request ) {
+    public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response, HttpServletRequest request) {
         User user = userService.getOne(new QueryWrapper<User>().eq("userName", loginDto.getUsername()));
 
 /**
  *出现错误 及时 return
  */
+        System.out.println(user);
         if (user == null) {
             System.out.println("用户不存在");
 
             //Assert.notNull(user, "用户不存在");
             return Result.fail("用户不存在", "-2");
-        }
-        if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))) {
+        } else if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))) {
             System.out.println("密码不正确");
             return Result.fail("密码不正确");
         }
@@ -73,8 +73,7 @@ public class AccountController {
 /**
  * 登录成功后 用户信息会保存在session中
  */
-        HttpSession session = request.getSession();
-        session.setAttribute("phone", user.getUsername());
+
         return Result.succ(MapUtil.builder()
                 .put("id", user.getId())
                 .put("username", user.getUsername())
@@ -104,17 +103,26 @@ public class AccountController {
      */
     @ResponseBody
     @PostMapping("/regina")
-    public Result regina(@Validated @RequestBody User user) {
+    public Result regina(@Validated @RequestBody LoginDto loginDto) {
+        User user = userService.getOne(new QueryWrapper<User>().eq("userName", loginDto.getUsername()));
+
+        if (user != null) {
+            System.out.println(user);
+            return Result.fail("用户已存在");
+        }
+        System.out.println(user);
         User userRegina = null;
         userRegina = new User();
         //加密
         String pass = user.getPassword();
         userRegina.setUsername(user.getUsername());
         userRegina.setPassword(SecureUtil.md5(pass));
+        userRegina.setAvatar(user.getAvatar());
+        userRegina.setEmail(user.getEmail());
         userRegina.setCreated(LocalDateTime.now());
-        userRegina.setStatus(0);
+        userRegina.setStatus(user.getStatus());
         userService.saveOrUpdate(userRegina);
-
+        System.out.println("注册成功！"+userRegina);
         return Result.succ("注册成功！");
     }
 

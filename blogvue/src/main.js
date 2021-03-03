@@ -6,9 +6,9 @@ import router from "./router";
 import axios from "axios";
 import ElementUI from "element-ui";
 import store from "./store/store";
-import "element-ui/lib/theme-chalk/index.css";
 import VueParticles from "vue-particles";
 import mavonEditor from 'mavon-editor'
+import "element-ui/lib/theme-chalk/index.css";
 import 'mavon-editor/dist/css/index.css'
 axios.defaults.baseURL = 'http://localhost:8081/'; // 填写后台请求统一的地址
 

@@ -4,8 +4,14 @@
     <div class="layer">
       <div class="some-space">
         <div class="form">
+          <div class="imgbox" v-if="!log">
+            <div v-for="(item, index) in Image" :key="index">
+              <el-radio v-model="radioimg" :label="index" border @change="changeimg"
+                ><img :src="item.img" alt="" srcset="" class="imgs" />
+              </el-radio>
+            </div>
+          </div>
           <h2>{{ log ? "登录许可" : "注册" }}</h2>
-
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
             <div class="item">
               <i class="iconfont icon-user"></i>
@@ -32,7 +38,7 @@
               /></el-form-item>
             </div>
             <div v-if="!log">
-              <div class="item">
+              <!-- <div class="item">
                 <i class="iconfont icon-password"></i>
                 <el-form-item prop="avatar" class="itemwidth">
                   <el-input
@@ -44,7 +50,7 @@
                     @keyup.enter="regina"
                     placeholder="作者"
                 /></el-form-item>
-              </div>
+              </div> -->
 
               <div class="item">
                 <i class="iconfont icon-password"></i>
@@ -60,6 +66,10 @@
                   />
                 </el-form-item>
               </div>
+            </div>
+            <div v-if="!log">
+              <el-radio v-model="radio" label="1">权限1</el-radio>
+              <el-radio v-model="radio" label="2">权限2</el-radio>
             </div>
             <el-button
               :plain="true"
@@ -118,6 +128,7 @@
 import BgAnimation from "@/bgAnimation";
 // import { login } from "@/api/login.js";
 import { mapMutations } from "vuex";
+import Image from "../utils/image.json";
 export default {
   name: "Login",
   components: {
@@ -135,7 +146,10 @@ export default {
       }
     };
     return {
+      radio: "1",
+      radioimg: 1,
       log: true,
+      Image: Image,
       ruleForm: {
         userName: "markerhub",
         userPwd: "111111",
@@ -148,7 +162,7 @@ export default {
         //全部效验吧
         email: [
           {
-            // validator: validatoremail,
+            validator: validatoremail,
             trigger: "blur",
           },
           {
@@ -170,93 +184,105 @@ export default {
       // return !(this.userName && this.userPwd);
     },
   },
-  created() {},
+  created() {
+    // console.log(Image);
+  },
   mounted() {},
   watch: {
     log: function (newVal, oldVal) {
       console.log(newVal, oldVal);
-      this.ruleForm.userName = newVal ? "markerhub" : "";
-      this.ruleForm.userPwd = newVal ? "111111" : "";
+      // this.ruleForm.userName = newVal ? "markerhub" : "";
+      // this.ruleForm.userPwd = newVal ? "111111" : "";
+      this.ruleForm.avatar = Image[this.radioimg].img;
     },
   },
   methods: {
     login(formName) {
-        this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-
-        //正确的账号: doudou  密码:123456
-        let url = "http://101.96.128.94:9999/data/user/login.php";
-        let options = {
-          username: this.ruleForm.userName,
-          password: this.ruleForm.userPwd,
-        };
-        this.$axios
-          .post("/login", options)
-          .then((res) => {
-            console.log(res);
-            const { code } = res.data;
-            if (code == 200) {
+          //正确的账号: doudou  密码:123456
+          let url = "http://101.96.128.94:9999/data/user/login.php";
+          let options = {
+            username: this.ruleForm.userName,
+            password: this.ruleForm.userPwd,
+          };
+          this.$axios
+            .post("/login", options)
+            .then((res) => {
               console.log(res);
-              const jwt = res.headers["authorization"];
-              const userInfo = res.data.data;
+              const { code } = res.data;
+              if (code == 200) {
+                console.log(res);
+                const jwt = res.headers["authorization"];
+                const userInfo = res.data.data;
 
-              // // 把数据共享出去
-              // this.$store.commit("SET_TOKEN", jwt);
-              // this.$store.commit("SET_USERINFO", userInfo);
-              this.SET_TOKEN(jwt);
-              this.SET_USERINFO(userInfo);
-              this.$router.push({
-                path: "/home",
-              });
-              this.$message({
-                message: "登录成功！",
-                showClose: true,
-                type: "success",
-              });
-            } else {
-              this.$message({
-                message: res.data.msg,
-                center: true,
-                type: "error",
-              });
-            }
-          })
-          .catch((err) => {
-            console.error("抛出异常" + err);
-          });
-
+                // // 把数据共享出去
+                // this.$store.commit("SET_TOKEN", jwt);
+                // this.$store.commit("SET_USERINFO", userInfo);
+                this.SET_TOKEN(jwt);
+                this.SET_USERINFO(userInfo);
+                this.$router.push({
+                  path: "/home",
+                });
+                this.$message({
+                  message: "登录成功！",
+                  showClose: true,
+                  type: "success",
+                });
+              } else {
+                this.$message({
+                  message: res.data.msg,
+                  center: true,
+                  type: "error",
+                });
+              }
+            })
+            .catch((err) => {
+              console.error("抛出异常" + err);
+            });
         } else {
           console.log("error submit!!");
           return false;
         }
       });
-
-
     },
     ...mapMutations({ SET_TOKEN: "SET_TOKEN", SET_USERINFO: "SET_USERINFO" }),
     regina(ruleForm) {
+      console.log(666)
       this.$refs[ruleForm].validate((valid) => {
+        console.log(661)
         if (valid) {
+          console.log(662)
           let options = {
             username: this.ruleForm.userName,
             password: this.ruleForm.userPwd,
             avatar: this.ruleForm.avatar,
             email: this.ruleForm.email,
+            status: this.radio,
           };
           this.$axios
             .post("/regina", options)
             .then((res) => {
               const { code } = res.data;
-            if (code == 200) {
-                 this.$router.push({
-                path: "/",
-              });
-              this.$message({
-                message: "注册成功！",
-                showClose: true,
-                type: "success",
-              });
-            }
+              if (code == 200) {
+                // this.$router.push({
+                //   path: "/home",
+                // });
+                this.log = true;
+                   this.ruleForm.userName=options.username
+              this.ruleForm.userPwd=options.username
+                this.$message({
+                  message: "注册成功！",
+                  showClose: true,
+                  type: "success",
+                });
+              }
+                this.$message({
+                  message: res.data.msg,
+                  showClose: true,
+                  type: "error",
+                });
+
             })
             .catch((err) => {
               console.error(err);
@@ -269,9 +295,16 @@ export default {
     },
     toggle() {
       this.log = !this.log;
-      this.userName = "";
-      this.userPwd = "";
+      this.ruleForm.userName = "";
+      this.ruleForm.userPwd = "";
+      this.ruleForm.avatar = "";
+      this.ruleForm.email = "";
     },
+    changeimg(img){
+      // console.log(Image[img].img)
+      this.ruleForm.avatar = Image[img].img;
+
+    }
   },
 };
 </script>
@@ -339,12 +372,32 @@ export default {
         border: 0;
         color: #fff !important;
       }
+      .imgbox {
+        display: flex;
+        justify-content: space-evenly;
+        >>> .el-radio__input {
+          display: none;
+        }
+        >>>.el-radio.is-bordered{
+          padding: 0;
+          height: 40px;
+          width: 40px;
+        }
+        >>>.el-radio__label{
+          padding: 0;
+        }
+        .imgs {
+          width: 38px;
+          height: 38px;
+          border-radius:4px;
+        }
+      }
       h2 {
         text-align: center;
         font-weight: normal;
         font-size: 26px;
         color: #d3d7f7;
-        padding-bottom: 35px;
+        // padding-bottom: 35px;
       }
       .input {
         font-size: 16px;

@@ -13,6 +13,7 @@ import com.example.service.BlogService;
 import com.example.service.UserService;
 import com.example.util.IpUtil;
 import com.example.util.ShiroUtil;
+import jdk.nashorn.internal.ir.ReturnNode;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class BlogController {
     }
 
     @GetMapping("/blog/{id}")
-    public Result detail(@PathVariable(name = "id") Long id ) {
+    public Result detail(@PathVariable(name = "id") Long id) {
         Blog blog = blogService.getById(id);
         Assert.notNull(blog, "该博客已删除！");
         return Result.succ(blog);
@@ -101,19 +102,13 @@ public class BlogController {
 
     @ResponseBody
     @DeleteMapping("delete/{id}")
-    public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request) {
+    public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request, LoginDto loginDto) {
 
 
-        HttpSession session = request.getSession();
-        System.out.println(session.getAttribute("phone"));
-
-//        User user = (User) SecurityUtils.getSubject().getPrincipal();
-//        System.out.println(user);
-
-
-        //
-
-
+/**
+ * 想要获取哪个用户操作的
+ * 下文
+ */
         System.out.println(id);
 
         Blog blog = blogService.getById(id);
