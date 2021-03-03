@@ -67,7 +67,7 @@
                 </el-form-item>
               </div>
             </div>
-            <div v-if="!log">
+            <div v-if="!log" class="permissions">
               <el-radio v-model="radio" label="1">权限1</el-radio>
               <el-radio v-model="radio" label="2">权限2</el-radio>
             </div>
@@ -136,7 +136,8 @@ export default {
   },
   data() {
     var validatoremail = (rule, value, callback) => {
-      var MobileRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      // var MobileRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      var MobileRegex = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
       if (value === "") {
         callback(new Error("请输入正确的邮箱"));
       } else if (!MobileRegex.test(value)) {
@@ -191,8 +192,8 @@ export default {
   watch: {
     log: function (newVal, oldVal) {
       console.log(newVal, oldVal);
-      // this.ruleForm.userName = newVal ? "markerhub" : "";
-      // this.ruleForm.userPwd = newVal ? "111111" : "";
+      this.ruleForm.userName = newVal ? "markerhub" : "";
+      this.ruleForm.userPwd = newVal ? "111111" : "";
       this.ruleForm.avatar = Image[this.radioimg].img;
     },
   },
@@ -418,7 +419,7 @@ export default {
         cursor: pointer;
         background: transparent;
         border-radius: 4px;
-        margin-top: 30px;
+        margin-top: 20px;
         &:hover {
           color: #fff;
           background: #0090ff;

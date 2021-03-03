@@ -1,8 +1,8 @@
 <!--  -->
 <template>
-  <div class=""  v-loading="loading">
+  <div class="" v-loading="loading">
     <Header />
-    <div style="margin: 0 10%">
+    <div style="margin: 0 auto; max-width: 960px">
       <el-timeline>
         <el-timeline-item
           :timestamp="item.created"
@@ -14,7 +14,10 @@
             <h4>
               <!-- :to="{path:'/blogId',query:{blogid: item.id} }" -->
               <router-link
-                :to="{ name: 'blogId', params: { blogid: item.id,status:item.status } }"
+                :to="{
+                  name: 'blogId',
+                  params: { blogid: item.id, status: item.status },
+                }"
               >
                 {{ item.title }}
               </router-link>
@@ -25,7 +28,7 @@
       </el-timeline>
     </div>
 
-    <div style="margin: 0 10%">
+    <div style="text-align: center; padding: 20px 0">
       <el-pagination
         layout="prev, pager, next"
         :total="total"
@@ -54,7 +57,7 @@ export default {
       currentpage: 1, //当前页数
       pagesize: 5, //每页显示条目个数
       data: {}, //数据
-      loading:true
+      loading: true,
     };
   },
   //监听属性 类似于data概念
@@ -74,7 +77,7 @@ export default {
           this.currentpage = res.data.data.current;
           this.pagesize = res.data.data.size;
           this.data = res.data.data.records;
-          this.loading=false
+          this.loading = false;
         })
         .catch((err) => {
           console.error(err);

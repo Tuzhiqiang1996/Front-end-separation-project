@@ -63,8 +63,8 @@ export default {
     main() {
       this.$router.push("/home");
     },
-    edit(e) {
-      this.$router.push("/edits");
+    edit() {
+      // this.$router.push("/edits");
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

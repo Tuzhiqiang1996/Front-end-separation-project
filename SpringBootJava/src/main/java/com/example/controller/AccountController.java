@@ -53,8 +53,7 @@ public class AccountController {
 
 /**
  *出现错误 及时 return
- */
-        System.out.println(user);
+ */ 
         if (user == null) {
             System.out.println("用户不存在");
 

@@ -27,7 +27,7 @@
         @click="btndelete"
       ></el-button>
     </div>
-    <div style="width: 80%">
+    <div style="max-width:960px">
       <div style="position: fixed; top: 5%;   left: 5%;">
         <el-button
           type="primary"
@@ -183,6 +183,7 @@ export default {
     width: 100%;
     min-height: 700px;
     padding: 20px 15px;
+
   }
 
 </style>

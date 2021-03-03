@@ -117,7 +117,7 @@ public class BlogController {
 
         //blogService.delete(id);
 
-        //blogService.removeById(id);
+        blogService.removeById(id);
         return Result.succ("操作成功", null);
     }
 
