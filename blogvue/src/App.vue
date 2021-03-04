@@ -26,8 +26,10 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: url("./assets/image/11.jpg")  ;
+  background-size:   100%;
 }
 html {
-  height: 100%;
+  /* height: 100%; */
 }
 </style>

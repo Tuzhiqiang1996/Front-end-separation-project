@@ -60,11 +60,10 @@ public class BlogController {
 
     @RequiresAuthentication
     @PostMapping("/blog/edit")
-    public Result edit(@Validated @RequestBody Blog blog) {
+    public Result edit(@Validated @RequestBody Blog blog  ) {
         // System.out.println(blog.toString());
         //System.out.println("输入中...");
-        Blog temp = null;
-
+        Blog temp = null; ;
         /**
          * @date 2021/2/21-11:37
          * 不知道声明错
@@ -84,11 +83,12 @@ public class BlogController {
         temp = new Blog();
         temp.setUserId(ShiroUtil.getProfile().getId());
         temp.setCreated(LocalDateTime.now());
-        temp.setStatus(0);
+        temp.setStatus(blog.getStatus());
         // System.out.println("编辑中...");
 
         BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
-//        System.out.println(blog + "" + temp);
+//        System.out.println(blog.getStatus() + "" + temp);
+
         blogService.saveOrUpdate(temp);
         return Result.succ("操作成功", null);
     }
@@ -109,17 +109,18 @@ public class BlogController {
 /**
  * 想要获取哪个用户操作的
  * 下文
+ * 可以有前端传一个参数 status 与当前  blog.getStatus()对比
  */
-        System.out.println(id);
+        //System.out.println(id);
 
         Blog blog = blogService.getById(id);
-        System.out.println(blog.getStatus());
+        //System.out.println(blog.getStatus());
 
 
         //blogService.delete(id);
 
         blogService.removeById(id);
-        return Result.succ("操作成功", null);
+        return Result.succ("删除成功", null);
     }
 
 

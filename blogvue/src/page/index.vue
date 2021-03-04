@@ -1,31 +1,37 @@
 <!--  -->
 <template>
-  <div class="" v-loading="loading">
+  <div class="content" v-loading="loading">
     <Header />
-    <div style="margin: 0 auto; max-width: 960px">
-      <el-timeline>
-        <el-timeline-item
-          :timestamp="item.created"
-          placement="top"
-          v-for="item in data"
-          :key="item.id"
-        >
-          <el-card>
-            <h4>
-              <!-- :to="{path:'/blogId',query:{blogid: item.id} }" -->
-              <router-link
-                :to="{
-                  name: 'blogId',
-                  params: { blogid: item.id, status: item.status },
-                }"
-              >
-                {{ item.title }}
-              </router-link>
-            </h4>
-            <p>{{ item.description }}</p>
-          </el-card>
-        </el-timeline-item>
-      </el-timeline>
+    <div class="box">
+      <div style="max-width: 960px; padding: 40px;    min-width: 760px;">
+        <el-timeline>
+          <el-timeline-item
+            :timestamp="item.created"
+            placement="top"
+            v-for="item in data"
+            :key="item.id"
+          >
+            <el-card>
+              <h4>
+                <!-- :to="{path:'/blogId',query:{blogid: item.id} }" -->
+                <router-link
+                  :to="{
+                    name: 'blogId',
+                    params: { blogid: item.id, status: item.status },
+                  }"
+                >
+                  {{ item.title }}
+                </router-link>
+              </h4>
+              <p>{{ item.description }}</p>
+            </el-card>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
+      <div >
+        <el-calendar v-model="value" style="width: 330px; text-align: center">
+        </el-calendar>
+      </div>
     </div>
 
     <div style="text-align: center; padding: 20px 0">
@@ -58,6 +64,7 @@ export default {
       pagesize: 5, //每页显示条目个数
       data: {}, //数据
       loading: true,
+      value: new Date(),
     };
   },
   //监听属性 类似于data概念
@@ -101,4 +108,16 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+.content >>> .el-calendar-table .el-calendar-day {
+
+  height: 30px;
+}
+.content >>> .el-calendar {
+   background: transparent;
+}
+.box {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+}
 </style>

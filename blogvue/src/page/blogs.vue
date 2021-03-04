@@ -27,8 +27,8 @@
         @click="btndelete"
       ></el-button>
     </div>
-    <div style="max-width:960px">
-      <div style="position: fixed; top: 5%;   left: 5%;">
+    <div style="max-width: 960px">
+      <div style="position: fixed; top: 5%; left: 5%">
         <el-button
           type="primary"
           icon="el-icon-back"
@@ -61,7 +61,7 @@ export default {
       content: "",
       title: "",
       loading: true,
-      status:""
+      status: "",
     };
   },
   //监听属性 类似于data概念
@@ -76,51 +76,65 @@ export default {
       this.$router.go(-1);
     },
     btndelete() {
-
       let url = "/delete/";
-      if(this.status==this.userInfo.status){
-
-        this.$axios
-          .delete(url + this.id)
-          .then((res) => {
-            console.log(res);
-            if (res.data.code == 200) {
-              this.$router.push({
-                path: "/home",
+      //同级
+      // if(this.status==this.userInfo.status){
+      //最高级 0
+      if (this.userInfo.status === 0) {
+        this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.$axios
+              .delete(url + this.id)
+              .then((res) => {
+                console.log(res);
+                if (res.data.code == 200) {
+                  this.$router.push({
+                    path: "/home",
+                  });
+                  this.$message({
+                    message: "删除成功！",
+                    showClose: true,
+                    type: "success",
+                  });
+                } else {
+                  this.$message({
+                    message: "删除失败！",
+                    showClose: true,
+                    type: "error",
+                  });
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+                this.$message({
+                  message: err,
+                  showClose: true,
+                  type: "error",
+                });
               });
-              this.$message({
-                message: "删除成功！",
-                showClose: true,
-                type: "success",
-              });
-            } else {
-              this.$message({
-                message: "删除失败！",
-                showClose: true,
-                type: "error",
-              });
-            }
           })
-          .catch((err) => {
-            console.error(err);
-              this.$message({
-                message: err,
-                showClose: true,
-                type: "error",
-              });
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
           });
-      }else{
-         this.$message({
-                message: "没有权限！",
-                showClose: true,
-                type: "error",
-              });
+      } else {
+        this.$message({
+          message: "没有权限！",
+          showClose: true,
+          type: "error",
+        });
       }
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-  console.log(this.userInfo.status)
+    console.log(this.userInfo.status);
     console.log(this.$route.params.blogid);
     let url = "http://localhost:8081/blog/";
     let id = this.$route.params.blogid;
@@ -128,14 +142,13 @@ export default {
     this.$axios
       .get(url + id)
       .then((res) => {
-
         const { code, data } = res.data;
 
         if (code == 200) {
           // this.content = data.content;
           // this.content = data.content.replace(/\\n/gm, "<br/>");
           this.title = data.title;
-          this.status=data.status;
+          this.status = data.status;
           this.loading = false;
           var MardownIt = require("markdown-it");
           var md = new MardownIt();
@@ -178,12 +191,10 @@ export default {
   padding: 10px;
   width: 80%;
 }
- .mblog {
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    width: 100%;
-    min-height: 700px;
-    padding: 20px 15px;
-
-  }
-
+.mblog {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  min-height: 700px;
+  padding: 20px 15px;
+}
 </style>

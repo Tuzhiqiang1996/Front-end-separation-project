@@ -36,6 +36,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import Header from "./header";
+import { mapState } from "vuex";
 export default {
   name: "blogsedit",
   //import引入的组件需要注入到对象中才能使用
@@ -48,6 +49,7 @@ export default {
         title: "",
         description: "",
         content: "",
+      status:""
       },
       rules: {
         title: [
@@ -67,12 +69,15 @@ export default {
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+     ...mapState(["userInfo"]),
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
     submitForm(formName) {
+
       let data = JSON.stringify(this.ruleForm);
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -107,6 +112,8 @@ export default {
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
        const blogId = this.$route.params.blogId;
+       //将当前的的用户权限传给status
+       this.ruleForm.status=this.userInfo.status
     console.log(this.$route.params);
     const _this = this;
     if (blogId) {
