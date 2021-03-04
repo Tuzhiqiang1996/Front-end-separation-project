@@ -43,6 +43,11 @@ const routes = [
     component: resolve => require(["@/page/editchange.vue"], resolve)
   },
   {
+    path: "/userlist",
+    name: "userlist",
+    component: resolve => require(["@/page/userlist.vue"], resolve)
+  },
+  {
     path: "*",
     redirect: "/404"
   },

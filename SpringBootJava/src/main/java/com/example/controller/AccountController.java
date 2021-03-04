@@ -9,6 +9,8 @@ package com.example.controller;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.dto.LoginDto;
 import com.example.common.lang.Result;
 import com.example.entity.Blog;
@@ -41,6 +43,7 @@ import java.time.LocalDateTime;
 @RestController
 
 public class AccountController {
+
     @Autowired
     UserService userService;
     @Autowired
@@ -53,7 +56,7 @@ public class AccountController {
 
 /**
  *出现错误 及时 return
- */ 
+ */
         if (user == null) {
             System.out.println("用户不存在");
 
@@ -121,8 +124,26 @@ public class AccountController {
         userRegina.setCreated(LocalDateTime.now());
         userRegina.setStatus(user.getStatus());
         userService.saveOrUpdate(userRegina);
-        System.out.println("注册成功！"+userRegina);
+        System.out.println("注册成功！" + userRegina);
         return Result.succ("注册成功！");
+    }
+
+    /**
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/3/4 10:00
+     * @message 获取用户列表
+     * 仿写Blog列表
+     */
+    @ResponseBody
+    @GetMapping("/userList")
+    public Result users(Integer currentPage) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
+        }
+        Page page = new Page(currentPage, 5);
+        IPage userlists=userService.page(page,new QueryWrapper<User>().orderByDesc("created"));
+        return Result.succ(userlists);
     }
 
 }

@@ -47,6 +47,7 @@ public class BlogController {
         }
         Page page = new Page(currentPage, 5);
         IPage pageData = blogService.page(page, new QueryWrapper<Blog>().orderByDesc("created"));
+//        System.out.println(pageData);
         return Result.succ(pageData);
     }
 
@@ -87,7 +88,7 @@ public class BlogController {
         // System.out.println("编辑中...");
 
         BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
-        System.out.println(blog + "" + temp);
+//        System.out.println(blog + "" + temp);
         blogService.saveOrUpdate(temp);
         return Result.succ("操作成功", null);
     }

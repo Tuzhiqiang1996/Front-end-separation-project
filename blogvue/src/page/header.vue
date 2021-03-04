@@ -2,13 +2,12 @@
 <template>
   <div class="header">
     <div class="user">
-
-    <img :src="userInfo.avatar" alt="" class="img">
+      <img :src="userInfo.avatar" alt="" class="img" />
     </div>
     <div class="user">
-      <h3>欢迎来到</h3>
+      <h3>欢迎</h3>
       <p>{{ userInfo.username }}</p>
-      <h3>的博客</h3>
+      <h3>来到TuTu的博客</h3>
     </div>
 
     <div class="user">
@@ -18,6 +17,10 @@
       </el-button>
 
       <el-button @click="btn"> 登出 </el-button>
+      <!-- <el-button>
+        <el-link type="success" href="/homeView">页面</el-link>
+      </el-button> -->
+      <el-button @click="user"> 用户列表 </el-button>
     </div>
   </div>
 </template>
@@ -46,18 +49,33 @@ export default {
   //方法集合
   methods: {
     btn() {
-      // this.$store.commit("REMOVE_INFO");
-      // this.$router.push("/");
-      this.$axios
-        .get("http://localhost:8081/logout", {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
+       this.$confirm("退出, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$axios
+            .get("/logout", {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then((res) => {
+              this.$store.commit("REMOVE_INFO");
+              this.$router.push("/");
+              console.log("d", res);
+            });
+          this.$message({
+            type: "success",
+            message: "退出成功!",
+          });
         })
-        .then((res) => {
-          this.$store.commit("REMOVE_INFO");
-          this.$router.push("/");
-          console.log("d", res);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
         });
     },
     main() {
@@ -66,11 +84,13 @@ export default {
     edit() {
       // this.$router.push("/edits");
     },
+    user(){
+      this.$router.push("/userlist");
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     console.log(this.userInfo);
-
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -93,7 +113,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.img{
+.img {
   width: 100px;
   border-radius: 50%;
 }
