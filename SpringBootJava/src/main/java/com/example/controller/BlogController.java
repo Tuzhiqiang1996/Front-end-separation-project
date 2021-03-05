@@ -106,13 +106,14 @@ public class BlogController {
 
     @ResponseBody
     @DeleteMapping("delete/{id}")
-    public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request, LoginDto loginDto) {
+        public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request, LoginDto loginDto) {
 
 
 /**
  * 想要获取哪个用户操作的
  * 下文
  * 可以有前端传一个参数 status 与当前  blog.getStatus()对比
+ * 前端已做
  */
         //System.out.println(id);
 

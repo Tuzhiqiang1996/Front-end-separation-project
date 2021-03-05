@@ -69,6 +69,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import Header from "./header";
+import { mapState } from "vuex";
 export default {
   name: "userlist",
   //import引入的组件需要注入到对象中才能使用
@@ -86,7 +87,9 @@ export default {
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    ...mapState(["userInfo"]),
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
@@ -103,17 +106,55 @@ export default {
             this.currentpage = res.data.data.current;
             this.pagesize = res.data.data.size;
           }
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
-          console.error(err);
+          // console.error(err);
+          this.$message({
+            message: res.data.msg,
+            showClose: true,
+            type: "error",
+          });
         });
     },
     handleEdit(index, row) {
       console.log(index, row);
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      this.$confirm("此操作将永久删除该用户？, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // if (this.userInfo.status === 0) {
+        this.$axios
+          .get(`/deleteUser?id=${row.id}&status=${this.userInfo.status}`)
+          .then((res) => {
+            if (res.data.code == 200) {
+              this.$message({
+                message: res.data.msg,
+                showClose: true,
+                type: "success",
+              });
+              this.pages(1);
+            } else {
+              this.$message({
+                message: res.data.msg,
+                showClose: true,
+                type: "error",
+              });
+            }
+          })
+          .catch((err) => {
+            this.$message({
+              message: err,
+              showClose: true,
+              type: "error",
+            });
+          });
+      });
+
+      console.log(row.id, row.status);
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

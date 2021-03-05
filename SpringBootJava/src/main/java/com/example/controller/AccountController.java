@@ -10,6 +10,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -166,5 +168,30 @@ public class AccountController {
         //过滤后的
         return Result.succ(jsonObject);
     }
+
+    /**
+     * [java.lang.Long]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/3/5 15:41
+     * @message 删除用户
+     * http://localhost:8081/deleteUser?id=1&ststus=10
+     * get方式接受多个参数
+     */
+    @ResponseBody
+    @GetMapping("/deleteUser")
+    public Result deleteUser(@RequestParam Integer id, @RequestParam Integer status) {
+//前端status 当前操作者
+        if (status != 0) {
+            return Result.fail("没有权限");
+        }
+
+        User userid = userService.getById(id);
+//        System.out.println(userid);
+        userService.removeById(userid);
+        return Result.succ("删除成功", null);
+    }
+
 
 }
