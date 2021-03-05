@@ -29,6 +29,7 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-backtop target=""></el-backtop>
   </div>
 </template>
 
@@ -150,5 +151,8 @@ export default {
 }
 .edit {
   width: 80%;
+  >>>.el-form-item__label{
+    color: aliceblue;
+  }
 }
 </style>

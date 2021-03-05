@@ -2,7 +2,12 @@
 <template>
   <div class="header">
     <div class="user">
-      <img :src="userInfo.avatar" alt="" class="img" />
+      <el-avatar :size="100" :src="userInfo.avatar" @error="errorHandler">
+        <img
+          src="https://img2.woyaogexing.com/2020/04/10/2911e52acd544055ab7f434108037632!400x400.webp"
+        />
+      </el-avatar>
+      <!-- <img :src="userInfo.avatar" alt="" class="img" /> -->
     </div>
     <div class="user">
       <h3>欢迎</h3>
@@ -49,7 +54,7 @@ export default {
   //方法集合
   methods: {
     btn() {
-       this.$confirm("退出, 是否继续?", "提示", {
+      this.$confirm("退出, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -84,9 +89,12 @@ export default {
     edit() {
       // this.$router.push("/edits");
     },
-    user(){
+    user() {
       this.$router.push("/userlist");
-    }
+    },
+     errorHandler() {
+        return true
+      }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

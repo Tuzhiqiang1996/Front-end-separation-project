@@ -8,6 +8,8 @@ package com.example.controller;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -72,9 +74,7 @@ public class AccountController {
 
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
-/**
- * 登录成功后 用户信息会保存在session中
- */
+ 
 
         return Result.succ(MapUtil.builder()
                 .put("id", user.getId())
@@ -138,12 +138,33 @@ public class AccountController {
     @ResponseBody
     @GetMapping("/userList")
     public Result users(Integer currentPage) {
+        /**
+         * [java.lang.Integer]
+         * @author Tu
+         * @date 2021/3/5 14:33
+         * @message
+         * @return com.example.common.lang.Result
+         * 将用户列表返回
+         * 将密码过滤掉返回
+         * 参考：https://blog.csdn.net/dudufine/article/details/52218463
+         */
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Page page = new Page(currentPage, 5);
-        IPage userlists=userService.page(page,new QueryWrapper<User>().orderByDesc("created"));
-        return Result.succ(userlists);
+        IPage userlists = userService.page(page, new QueryWrapper<User>().orderByDesc("created"));
+        JSONObject jsonObject = new JSONObject(userlists); //可以将json格式的字符串变成json对象
+        JSONArray jsonArray = (JSONArray) jsonObject.get("records");
+//        System.out.println(jsonArray);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonData = (JSONObject) jsonArray.get(i);//得到对象中的第i条记录
+            jsonData.remove("password");
+//            System.out.println("data[" + i + "]:" + jsonData.remove("password"));
+        }
+//        System.out.println(String.valueOf(jsonObject));
+//        return Result.succ(userlists);
+        //过滤后的
+        return Result.succ(jsonObject);
     }
 
 }

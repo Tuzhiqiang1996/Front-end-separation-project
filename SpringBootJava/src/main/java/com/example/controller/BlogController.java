@@ -32,6 +32,9 @@ import java.time.LocalDateTime;
  *
  * @author
  * @since 2021-01-29
+ * @RestController 相当于  @ResponseBody+ @Controller合在一起
+ *@ResponseBody的作用其实是将java对象转为json格式的数据。
+ * @Controller
  */
 @RestController
 public class BlogController {
