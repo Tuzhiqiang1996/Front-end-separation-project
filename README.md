@@ -11,3 +11,5 @@ https://mp.baomidou.com/guide/
 > Spring Boot快速入门 https://blog.didispace.com/spring-boot-learning-1/
 
 > @ResponseBody详解  https://blog.csdn.net/originations/article/details/89492884
+
+> springboot https://www.cnblogs.com/WUXIAOCHANG/p/10877266.html
