@@ -1,8 +1,8 @@
 <!--  -->
 <template>
-  <div class="content" v-loading="loading">
+  <div class="content" >
     <Header />
-    <div class="box">
+    <div class="box" v-loading="loading">
       <div style="max-width: 960px; padding: 40px;    min-width: 760px;">
         <el-timeline>
           <el-timeline-item

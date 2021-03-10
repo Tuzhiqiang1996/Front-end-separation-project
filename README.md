@@ -1,3 +1,8 @@
+springboot mybatis plus  shiro Redis hibernate validatior jwt
+
+vue element-ui axios mavon-editor markdown-it github-markdown-css
+
+
 ### 快速搭建工程
 
 https://start.spring.io/
