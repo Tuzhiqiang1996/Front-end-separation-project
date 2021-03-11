@@ -216,7 +216,6 @@ export default {
                 console.log(res);
                 const jwt = res.headers["authorization"];
                 const userInfo = res.data.data;
-
                 // // 把数据共享出去
                 // this.$store.commit("SET_TOKEN", jwt);
                 // this.$store.commit("SET_USERINFO", userInfo);

@@ -91,7 +91,7 @@ export default {
             this.$axios
               .delete(url + this.id)
               .then((res) => {
-                console.log(res);
+                // console.log(res);
                 if (res.data.code == 200) {
                   this.$router.push({
                     path: "/home",
@@ -135,8 +135,8 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    console.log(this.userInfo.status);
-    console.log(this.$route.params.blogid);
+    // console.log(this.userInfo.status);
+    // console.log(this.$route.params.blogid);
     let url = "http://localhost:8081/blog/";
     let id = this.$route.params.blogid;
     this.id = id;

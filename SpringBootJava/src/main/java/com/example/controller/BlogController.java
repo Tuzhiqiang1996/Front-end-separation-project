@@ -8,13 +8,9 @@ import com.example.common.dto.LoginDto;
 import com.example.common.lang.Result;
 import com.example.entity.Blog;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.entity.User;
 import com.example.service.BlogService;
 import com.example.service.UserService;
-import com.example.util.IpUtil;
 import com.example.util.ShiroUtil;
-import jdk.nashorn.internal.ir.ReturnNode;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -130,7 +125,7 @@ public class BlogController {
     }
 
     /**
-     * [java.lang.Character]
+     * [java.lang.String]
      * @author Tu
      * @date 2021/3/10 17:52
      * @message 查询功能(模糊查询)
@@ -156,7 +151,19 @@ public class BlogController {
         return Result.succ("操作成功",Blogs);
     }
 
+/**
+ * []
+ * @author Tu
+ * @date 2021/3/11 15:11
+ * @message 在线人数统计
+ * @return com.example.common.lang.Result
+ *
+ */
+    @GetMapping("/getOnlineCount")
+    public Result getonlinecount(){
 
+        return Result.succ("1");
+    }
 
 
 }

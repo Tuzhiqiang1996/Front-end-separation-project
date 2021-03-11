@@ -10,34 +10,23 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.dto.LoginDto;
 import com.example.common.lang.Result;
-import com.example.entity.Blog;
 import com.example.entity.User;
 import com.example.service.UserService;
 import com.example.util.JwtUtils;
-import com.example.util.coolutil;
 import lombok.Data;
-import org.apache.logging.log4j.util.Base64Util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.RequestScope;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 /**
@@ -77,7 +66,6 @@ public class AccountController {
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
 
-
         return Result.succ(MapUtil.builder()
                 .put("id", user.getId())
                 .put("username", user.getUsername())
@@ -96,7 +84,6 @@ public class AccountController {
     @RequiresAuthentication
     @GetMapping("/logout")
     public Result logout() {
-
         SecurityUtils.getSubject().logout();
         return Result.succ(null);
     }
@@ -186,12 +173,9 @@ public class AccountController {
         if (status != 0) {
             return Result.fail("没有权限");
         }
-
         User userid = userService.getById(id);
 //        System.out.println(userid);
         userService.removeById(userid);
         return Result.succ("删除成功", null);
     }
-
-
 }

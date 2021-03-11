@@ -67,19 +67,26 @@ export default {
               },
             })
             .then((res) => {
-              this.$store.commit("REMOVE_INFO");
-              this.$router.push("/");
-              console.log("d", res);
+              if (res.data.code == 200) {
+                this.$store.commit("REMOVE_INFO");
+                this.$router.push("/");
+                // console.log("d", res);
+                this.$message({
+                  type: "success",
+                  message: "退出成功!",
+                });
+              } else {
+                this.$message({
+                  type: "error",
+                  message: "退出失败!",
+                });
+              }
             });
-          this.$message({
-            type: "success",
-            message: "退出成功!",
-          });
         })
-        .catch(() => {
+        .catch((err) => {
           this.$message({
-            type: "info",
-            message: "已取消",
+            type: "error",
+            message: err,
           });
         });
     },
@@ -92,9 +99,9 @@ export default {
     user() {
       this.$router.push("/userlist");
     },
-     errorHandler() {
-        return true
-      }
+    errorHandler() {
+      return true;
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {

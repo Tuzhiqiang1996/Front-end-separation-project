@@ -91,7 +91,7 @@ export default {
               },
             })
             .then((res) => {
-              console.log(this.ruleForm);
+              // console.log(this.ruleForm);
               _this.$alert("操作成功", "提示", {
                 confirmButtonText: "确定",
                 callback: (action) => {
