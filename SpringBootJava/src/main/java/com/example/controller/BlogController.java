@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -31,10 +32,10 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author
- * @since 2021-01-29
  * @RestController 相当于  @ResponseBody+ @Controller合在一起
- *@ResponseBody的作用其实是将java对象转为json格式的数据。
+ * @ResponseBody的作用其实是将java对象转为json格式的数据。
  * @Controller
+ * @since 2021-01-29
  */
 @RestController
 public class BlogController {
@@ -63,10 +64,11 @@ public class BlogController {
 
     @RequiresAuthentication
     @PostMapping("/blog/edit")
-    public Result edit(@Validated @RequestBody Blog blog  ) {
+    public Result edit(@Validated @RequestBody Blog blog) {
         // System.out.println(blog.toString());
         //System.out.println("输入中...");
-        Blog temp = null; ;
+        Blog temp = null;
+        ;
         /**
          * @date 2021/2/21-11:37
          * 不知道声明错
@@ -106,7 +108,7 @@ public class BlogController {
 
     @ResponseBody
     @DeleteMapping("delete/{id}")
-        public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request, LoginDto loginDto) {
+    public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request, LoginDto loginDto) {
 
 
 /**
@@ -126,6 +128,35 @@ public class BlogController {
         blogService.removeById(id);
         return Result.succ("删除成功", null);
     }
+
+    /**
+     * [java.lang.Character]
+     * @author Tu
+     * @date 2021/3/10 17:52
+     * @message 查询功能(模糊查询)
+     * @return com.example.common.lang.Result
+     * 来源
+     * https://blog.csdn.net/qq_40222207/article/details/105347632?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
+     * https://blog.csdn.net/weixin_51370812/article/details/111686736
+     */
+    @GetMapping("/search")
+    public Result search(String value){
+        if(value==null){
+            System.out.println(value);
+            return Result.fail("没有数据！");
+        }
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("title",value);
+        List<Blog> Blogs = blogService.list(queryWrapper);
+//        System.out.println(Blogs);
+         //判断数据是否为空
+        if(Blogs==null||Blogs.size()==0){
+            return Result.fail("没有数据！");
+        }
+        return Result.succ("操作成功",Blogs);
+    }
+
+
 
 
 }

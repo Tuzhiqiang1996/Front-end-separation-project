@@ -105,6 +105,13 @@ export default {
             this.total = res.data.data.total;
             this.currentpage = res.data.data.current;
             this.pagesize = res.data.data.size;
+          } else{
+
+            this.$message({
+              message: res.data.msg,
+              showClose: true,
+              type: "error",
+            });
           }
           // console.log(res);
         })

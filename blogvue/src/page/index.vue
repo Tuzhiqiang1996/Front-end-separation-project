@@ -1,9 +1,9 @@
 <!--  -->
 <template>
-  <div class="content" >
+  <div class="content">
     <Header />
     <div class="box" v-loading="loading">
-      <div style="max-width: 960px; padding: 40px;    min-width: 760px;">
+      <div style="max-width: 960px; padding: 40px; min-width: 760px">
         <el-timeline>
           <el-timeline-item
             :timestamp="item.created"
@@ -28,9 +28,8 @@
           </el-timeline-item>
         </el-timeline>
       </div>
-      <div >
-        <el-calendar v-model="value" style="width: 330px; text-align: center">
-        </el-calendar>
+      <div>
+        <LightView v-on:msgData="updateData" />
       </div>
     </div>
 
@@ -52,10 +51,12 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import Header from "./header";
+import LightView from "./lightView";
+import bus from "../utils/eventBus";
 export default {
   name: "index",
   //import引入的组件需要注入到对象中才能使用
-  components: { Header },
+  components: { Header, LightView },
   data() {
     //这里存放数据
     return {
@@ -64,7 +65,6 @@ export default {
       pagesize: 5, //每页显示条目个数
       data: {}, //数据
       loading: true,
-      value: new Date(),
     };
   },
   //监听属性 类似于data概念
@@ -79,16 +79,53 @@ export default {
       this.$axios
         .get(url + page)
         .then((res) => {
-          console.log(res);
-          this.total = res.data.data.total;
-          this.currentpage = res.data.data.current;
-          this.pagesize = res.data.data.size;
-          this.data = res.data.data.records;
-          this.loading = false;
+          // console.log(res);
+          if (res.data.code == 200) {
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
+            this.data = res.data.data.records;
+            this.loading = false;
+          } else {
+            this.loading = true;
+            this.$message({
+              message: res.data.msg,
+              showClose: true,
+              type: "error",
+            });
+          }
         })
         .catch((err) => {
           console.error(err);
+          this.$message({
+            message: res.data.msg,
+            showClose: true,
+            type: "error",
+          });
         });
+    },
+    updateData(msg) {
+      var self = this;
+      if (msg.data.code == 200) {
+        self.data = msg.data.data;
+        self.total = msg.data.data.length;
+        self.loading = false;
+      } else {
+        this.$message({
+          message: msg.data.msg,
+          showClose: true,
+          type: "error",
+        });
+        const loading = this.$loading({
+          lock: true,
+          text: "Loading",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 2000);
+      }
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -109,11 +146,10 @@ export default {
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
 .content >>> .el-calendar-table .el-calendar-day {
-
   height: 30px;
 }
 .content >>> .el-calendar {
-   background: transparent;
+  background: transparent;
 }
 .box {
   display: flex;

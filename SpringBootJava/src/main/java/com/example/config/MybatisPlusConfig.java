@@ -1,6 +1,7 @@
 package com.example.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.example.mapper.BlogMapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ public class MybatisPlusConfig {
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+//        BlogMapper.selectPage(paginationInterceptor,null);
         return paginationInterceptor;
     }
 }
