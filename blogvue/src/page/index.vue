@@ -2,8 +2,8 @@
 <template>
   <div class="content">
     <Header />
-    <div class="box" v-loading="loading">
-      <div style="max-width: 960px; padding: 40px; min-width: 760px">
+    <div class="box" >
+      <div style="max-width: 960px; padding: 40px; min-width: 760px" v-loading="loading">
         <el-timeline>
           <el-timeline-item
             :timestamp="item.created"

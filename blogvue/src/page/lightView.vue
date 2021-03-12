@@ -9,7 +9,7 @@
           clearable
           style="width: 200px"
         ></el-input>
-        <el-button @click="btn" type="primary">搜素</el-button>
+        <el-button @click="btn" type="primary" plain>搜素</el-button>
       </div>
       <el-calendar v-model="value"> </el-calendar>
     </div>
