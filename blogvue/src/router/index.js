@@ -48,6 +48,11 @@ const routes = [
     component: resolve => require(["@/page/userlist.vue"], resolve)
   },
   {
+    path: "/systemList",
+    name: "systemList",
+    component: resolve => require(["@/page/systemList.vue"], resolve)
+  },
+  {
     path: "*",
     redirect: "/404"
   },

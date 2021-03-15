@@ -26,6 +26,7 @@
         <el-link type="success" href="/homeView">页面</el-link>
       </el-button> -->
       <el-button @click="user"> 用户列表 </el-button>
+      <el-button @click="system"> 表格1 </el-button>
     </div>
   </div>
 </template>
@@ -98,6 +99,9 @@ export default {
     },
     user() {
       this.$router.push("/userlist");
+    },
+    system() {
+      this.$router.push("/systemList");
     },
     errorHandler() {
       return true;

@@ -86,8 +86,9 @@ public class BlogController {
         temp.setStatus(blog.getStatus());
         // System.out.println("编辑中...");
 
-        BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
-//        System.out.println(blog.getStatus() + "" + temp);
+//        BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
+        BeanUtil.copyProperties(blog, temp );
+        //        System.out.println(blog.getStatus() + "" + temp);
 
         blogService.saveOrUpdate(temp);
         return Result.succ("操作成功", null);

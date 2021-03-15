@@ -91,13 +91,22 @@ public class AccountController {
     /**
      * 注册功能
      * Regina
+     * 3/15 出现错误情况 无法注册 获取不到前端的返回值
+     * 将 LoginDto loginDto 修改成 User user
+     * 下方 修改
+     *  User user1 = userService.getOne(new QueryWrapper<User>().eq("userName", user.getUsername()));
+     *
+     *         if (user1 != null) {
+     *             System.out.println(user);
+     *             return Result.fail("用户已存在");
+     *         }
      */
     @ResponseBody
     @PostMapping("/regina")
-    public Result regina(@Validated @RequestBody LoginDto loginDto) {
-        User user = userService.getOne(new QueryWrapper<User>().eq("userName", loginDto.getUsername()));
+    public Result regina(@Validated @RequestBody User user) {
+        User user1 = userService.getOne(new QueryWrapper<User>().eq("userName", user.getUsername()));
 
-        if (user != null) {
+        if (user1 != null) {
             System.out.println(user);
             return Result.fail("用户已存在");
         }

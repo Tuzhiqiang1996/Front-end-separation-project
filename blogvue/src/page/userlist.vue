@@ -105,8 +105,7 @@ export default {
             this.total = res.data.data.total;
             this.currentpage = res.data.data.current;
             this.pagesize = res.data.data.size;
-          } else{
-
+          } else {
             this.$message({
               message: res.data.msg,
               showClose: true,
@@ -133,32 +132,39 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        // if (this.userInfo.status === 0) {
-        this.$axios
-          .get(`/deleteUser?id=${row.id}&status=${this.userInfo.status}`)
-          .then((res) => {
-            if (res.data.code == 200) {
+        if (row.status !== 0) {
+          this.$axios
+            .get(`/deleteUser?id=${row.id}&status=${this.userInfo.status}`)
+            .then((res) => {
+              if (res.data.code == 200) {
+                this.$message({
+                  message: res.data.msg,
+                  showClose: true,
+                  type: "success",
+                });
+                this.pages(1);
+              } else {
+                this.$message({
+                  message: res.data.msg,
+                  showClose: true,
+                  type: "error",
+                });
+              }
+            })
+            .catch((err) => {
               this.$message({
-                message: res.data.msg,
-                showClose: true,
-                type: "success",
-              });
-              this.pages(1);
-            } else {
-              this.$message({
-                message: res.data.msg,
+                message: err,
                 showClose: true,
                 type: "error",
               });
-            }
-          })
-          .catch((err) => {
-            this.$message({
-              message: err,
-              showClose: true,
-              type: "error",
             });
+        } else {
+          this.$message({
+            message: "该账号不可删除",
+            showClose: true,
+            type: "error",
           });
+        }
       });
 
       console.log(row.id, row.status);
