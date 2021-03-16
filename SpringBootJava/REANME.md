@@ -24,3 +24,29 @@
 ### 访问
 登录
 http://localhost:8081/login
+
+
+### 项目结构
+```
+com.example   根目录
+        ├─ common 公共类
+                ├─ dto
+                ├─ exception
+                └─ lang 
+        ├─ config 配置信息类
+                ├─ CoreConfig.java
+                ├─ MybatisPlusConfig.java
+                └─ShiroConfig.lava
+        ├─ controller 前端控制器
+                    
+        ├─ entity
+        ├─ mapper 
+        ├─ service 数据服务层
+        ├─ shiro        
+        ├─ util 工具类
+        ├─CondeGenerator
+        └─VueblogApplication.java 工程启动类
+        
+          
+          
+```

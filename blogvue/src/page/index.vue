@@ -127,10 +127,28 @@ export default {
         }, 2000);
       }
     },
+    //动态加载script
+    scriptinit() {
+      // 创建script标签，引入外部文件
+      let script = document.getElementById("gaodeMapScript");
+      if (!script) {
+        let link = document.createElement("link");
+        link.href =
+          "https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css";
+        link.rel = "stylesheet";
+        script = document.createElement("script");
+        script.id = "gaodeMapScript";
+        script.type = "text/javascript";
+        script.src =
+          "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/autoload.js";
+        document.getElementsByTagName("head")[0].append(script, link);
+      }
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.pages(1);
+       this.scriptinit();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
