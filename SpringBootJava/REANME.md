@@ -29,7 +29,7 @@ http://localhost:8081/login
 ### 项目结构
 ```
 com.example   根目录
-        ├─ common 公共类
+        ├─ common 公共类 用于存放配置类，工具类
                 ├─ dto
                 ├─ exception
                 └─ lang 
@@ -37,16 +37,25 @@ com.example   根目录
                 ├─ CoreConfig.java
                 ├─ MybatisPlusConfig.java
                 └─ShiroConfig.lava
-        ├─ controller 前端控制器
+        ├─ controller 前端控制器 处理用户输入请求
                     
-        ├─ entity
+        ├─ entity 模型层，存放实体类
         ├─ mapper 
-        ├─ service 数据服务层
+        ├─ service 数据服务层 
+                └─impl 数据服务实现层
         ├─ shiro        
         ├─ util 工具类
         ├─CondeGenerator
         └─VueblogApplication.java 工程启动类
+resources
+        ├─ mapper
+                ├─
+        ├─ MATA-INF
+                ├─
+        ├─ application.properties 核心配置文件
+        ├─ 
         
+       
           
           
 ```
