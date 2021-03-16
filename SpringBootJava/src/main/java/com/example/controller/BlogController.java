@@ -56,7 +56,13 @@ public class BlogController {
         Assert.notNull(blog, "该博客已删除！");
         return Result.succ(blog);
     }
-
+/**
+ * [com.example.entity.Blog]
+ * @author Tu
+ * @date 2021/3/16 10:25
+ * @message 修改功能
+ * @return com.example.common.lang.Result
+ */
     @RequiresAuthentication
     @PostMapping("/blog/edit")
     public Result edit(@Validated @RequestBody Blog blog) {
@@ -81,19 +87,40 @@ public class BlogController {
 //        System.out.println("编辑中...");
 //       }
         temp = new Blog();
-        temp.setUserId(ShiroUtil.getProfile().getId());
+//        temp.setUserId(ShiroUtil.getProfile().getId());
         temp.setCreated(LocalDateTime.now());
         temp.setStatus(blog.getStatus());
         // System.out.println("编辑中...");
 
 //        BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
-        BeanUtil.copyProperties(blog, temp );
+        BeanUtil.copyProperties(blog, temp);
         //        System.out.println(blog.getStatus() + "" + temp);
 
         blogService.saveOrUpdate(temp);
         return Result.succ("操作成功", null);
     }
-
+ /**
+  * [com.example.entity.Blog]
+  * @author Tu
+  * @date 2021/3/16 10:08
+  * @message 新增功能
+  * BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status"); 为曾
+  *  BeanUtil.copyProperties(blog, temp); 为改
+  *  新增功能要添加userID
+  *  上面的修改功能 注释掉useID
+  * @return com.example.common.lang.Result
+  */
+@PostMapping("/blog/add")
+public Result editadd(@Validated @RequestBody Blog blog) {
+    Blog temp = null;
+    temp = new Blog();
+    temp.setCreated(LocalDateTime.now());
+    temp.setUserId(ShiroUtil.getProfile().getId());
+    temp.setStatus(blog.getStatus());
+    BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
+    blogService.saveOrUpdate(temp);
+    return Result.succ("操作成功", null);
+}
     /**
      * 删除功能
      *
@@ -113,11 +140,12 @@ public class BlogController {
  * 可以有前端传一个参数 status 与当前  blog.getStatus()对比
  * 前端已做
  */
-        //System.out.println(id);
+
 
         Blog blog = blogService.getById(id);
-        //System.out.println(blog.getStatus());
-
+        System.out.println(blog.getStatus());
+        System.out.println(id);
+        System.out.println(blog);
 
         //blogService.delete(id);
 
@@ -127,41 +155,42 @@ public class BlogController {
 
     /**
      * [java.lang.String]
-     * @author Tu
-     * @date 2021/3/10 17:52
-     * @message 查询功能(模糊查询)
+     *
      * @return com.example.common.lang.Result
      * 来源
      * https://blog.csdn.net/qq_40222207/article/details/105347632?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
      * https://blog.csdn.net/weixin_51370812/article/details/111686736
+     * @author Tu
+     * @date 2021/3/10 17:52
+     * @message 查询功能(模糊查询)
      */
     @GetMapping("/search")
-    public Result search(String value){
-        if(value==null){
+    public Result search(String value) {
+        if (value == null) {
             System.out.println(value);
             return Result.fail("没有数据！");
         }
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("title",value);
+        queryWrapper.like("title", value);
         List<Blog> Blogs = blogService.list(queryWrapper);
 //        System.out.println(Blogs);
-         //判断数据是否为空
-        if(Blogs==null||Blogs.size()==0){
+        //判断数据是否为空
+        if (Blogs == null || Blogs.size() == 0) {
             return Result.fail("没有数据！");
         }
-        return Result.succ("操作成功",Blogs);
+        return Result.succ("操作成功", Blogs);
     }
 
-/**
- * []
- * @author Tu
- * @date 2021/3/11 15:11
- * @message 在线人数统计
- * @return com.example.common.lang.Result
- *
- */
+    /**
+     * []
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/3/11 15:11
+     * @message 在线人数统计
+     */
     @GetMapping("/getOnlineCount")
-    public Result getonlinecount(){
+    public Result getonlinecount() {
 
         return Result.succ("1");
     }

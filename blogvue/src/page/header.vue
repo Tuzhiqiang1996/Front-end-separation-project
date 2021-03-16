@@ -18,7 +18,8 @@
     <div class="user">
       <el-button @click="main"> 主页 </el-button>
       <el-button @click="edit">
-        <el-link type="success" href="/edits">发表博客</el-link>
+        <el-link type="success" >发表博客</el-link>
+        <!-- <el-link type="success" href="/edits">发表博客</el-link> -->
       </el-button>
 
       <el-button @click="btn"> 登出 </el-button>
@@ -94,7 +95,7 @@ export default {
       this.$router.push("/home");
     },
     edit() {
-      // this.$router.push("/edits");
+      this.$router.push("/edits");
     },
     user() {
       this.$router.push("/userlist");

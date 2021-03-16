@@ -46,11 +46,11 @@ export default {
     //这里存放数据
     return {
       ruleForm: {
-        id: "97",
+        // id: "",
         title: "",
         description: "",
         content: "",
-      status:""
+        status: "",
       },
       rules: {
         title: [
@@ -71,20 +71,21 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-     ...mapState(["userInfo"]),
+    ...mapState(["userInfo"]),
   },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
     submitForm(formName) {
+      let ISNAME = this.$route.params.blogId  ? "/blog/edit":"/blog/add"
 
       let data = JSON.stringify(this.ruleForm);
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const _this = this;
           this.$axios
-            .post("http://localhost:8081/blog/edit", data, {
+            .post(ISNAME, data, {
               headers: {
                 Authorization: localStorage.getItem("token"),
                 "Content-Type": "application/json;charset=utf-8",
@@ -112,16 +113,15 @@ export default {
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-       const blogId = this.$route.params.blogId;
-       //将当前的的用户权限传给status
-       this.ruleForm.status=this.userInfo.status
+    const blogId = this.$route.params.blogId;
+    //将当前的的用户权限传给status
+    this.ruleForm.status = this.userInfo.status;
     console.log(this.$route.params);
     const _this = this;
     if (blogId) {
       this.$axios.get("http://localhost:8081/blog/" + blogId).then((res) => {
-
         const blog = res.data.data;
-        console.log(blog)
+        console.log(blog);
         _this.ruleForm.id = blog.id;
         _this.ruleForm.title = blog.title;
         _this.ruleForm.description = blog.description;
@@ -151,7 +151,7 @@ export default {
 }
 .edit {
   width: 80%;
-  >>>.el-form-item__label{
+  >>> .el-form-item__label {
     color: aliceblue;
   }
 }
