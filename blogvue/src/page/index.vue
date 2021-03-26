@@ -2,8 +2,11 @@
 <template>
   <div class="content">
     <Header />
-    <div class="box" >
-      <div style="max-width: 960px; padding: 40px; min-width: 760px" v-loading="loading">
+    <div class="box">
+      <div
+        style="max-width: 960px; padding: 40px; min-width: 760px"
+        v-loading="loading"
+      >
         <el-timeline>
           <el-timeline-item
             :timestamp="item.created"
@@ -133,6 +136,7 @@ export default {
       let script = document.getElementById("gaodeMapScript");
       if (!script) {
         let link = document.createElement("link");
+        link.id='links'
         link.href =
           "https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css";
         link.rel = "stylesheet";
@@ -143,12 +147,16 @@ export default {
           "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/autoload.js";
         document.getElementsByTagName("head")[0].append(script, link);
       }
+      if (!JSON.parse(sessionStorage.getItem("userInfo"))) {
+        script.remove();
+        link.remove();
+      }
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.pages(1);
-       this.scriptinit();
+    this.scriptinit();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

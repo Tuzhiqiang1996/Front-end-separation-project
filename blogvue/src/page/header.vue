@@ -1,7 +1,7 @@
 <!-- 头部 -->
 <template>
   <div class="header">
-    <div class="user">
+    <div class="user" @click="userinfo">
       <el-avatar :size="100" :src="userInfo.avatar" @error="errorHandler">
         <img
           src="https://img2.woyaogexing.com/2020/04/10/2911e52acd544055ab7f434108037632!400x400.webp"
@@ -18,7 +18,7 @@
     <div class="user">
       <el-button @click="main"> 主页 </el-button>
       <el-button @click="edit">
-        <el-link type="success" >发表博客</el-link>
+        <el-link type="success">发表博客</el-link>
         <!-- <el-link type="success" href="/edits">发表博客</el-link> -->
       </el-button>
 
@@ -76,6 +76,13 @@ export default {
                   type: "success",
                   message: "退出成功!",
                 });
+                let script = document.getElementById("gaodeMapScript");
+                let link = document.getElementById("links");
+                let waifu = document.getElementById("waifu");
+                script.remove();
+                link.remove();
+                waifu.remove();
+                console.log(2131);
               } else {
                 this.$message({
                   type: "error",
@@ -99,6 +106,9 @@ export default {
     },
     user() {
       this.$router.push("/userlist");
+    },
+    userinfo() {
+      this.$router.push("/userinfo");
     },
     errorHandler() {
       return true;
