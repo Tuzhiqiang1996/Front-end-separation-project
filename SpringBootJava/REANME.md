@@ -40,7 +40,7 @@ com.example   根目录
         ├─ controller 前端控制器 处理用户输入请求
                     
         ├─ entity 模型层，存放实体类
-        ├─ mapper 
+        ├─ mapper dao层 
         ├─ service 数据服务层 
                 └─impl 数据服务实现层
         ├─ shiro        
