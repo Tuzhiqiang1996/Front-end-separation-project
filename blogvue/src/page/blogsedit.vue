@@ -14,6 +14,9 @@
           <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
 
+        <el-form-item label="标签" prop="label">
+          <el-input v-model="ruleForm.label"></el-input>
+        </el-form-item>
         <el-form-item label="摘要" prop="description">
           <el-input type="textarea" v-model="ruleForm.description"></el-input>
         </el-form-item>
@@ -51,6 +54,7 @@ export default {
         description: "",
         content: "",
         status: "",
+        label: "",
       },
       rules: {
         title: [
@@ -78,7 +82,7 @@ export default {
   //方法集合
   methods: {
     submitForm(formName) {
-      let ISNAME = this.$route.params.blogId  ? "/blog/edit":"/blog/add"
+      let ISNAME = this.$route.params.blogId ? "/blog/edit" : "/blog/add";
 
       let data = JSON.stringify(this.ruleForm);
       this.$refs[formName].validate((valid) => {
@@ -126,6 +130,7 @@ export default {
         _this.ruleForm.title = blog.title;
         _this.ruleForm.description = blog.description;
         _this.ruleForm.content = blog.content;
+        _this.ruleForm.label = blog.label;
       });
     }
   },

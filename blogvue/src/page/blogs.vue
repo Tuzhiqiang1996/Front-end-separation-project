@@ -1,31 +1,37 @@
 <!-- 详情 -->
 <template>
-  <div
-    class="mblog"
-    style="
-      <!-- justify-content: center;
-      align-items: center;
-      display: inline-flex;
-      height: 100%;
-      width: 100%;
-      flex-direction: column; -->
-    "
-    v-loading="loading"
-  >
-    <h2>{{ title }}</h2>
+  <div class="mblog" v-loading="loading">
+    <h2>{{ formName.title }}</h2>
     <div class="top">
       <el-link icon="el-icon-edit">
-        <router-link :to="{ name: 'editblogid', params: { blogId: id } }">
+        <router-link
+          :to="{ name: 'editblogid', params: { blogId: id } }"
+          style="color: #fff"
+        >
           编辑
         </router-link>
       </el-link>
       <el-button
         type="danger"
-        style="margin-left: 10px"
+        style="margin: 0 10px"
         icon="el-icon-delete"
         circle
         @click="btndelete"
       ></el-button>
+      <div>
+        <el-input
+          v-focus
+          v-if="inputVisible"
+          class="input-new-tag"
+          v-model="formName.label"
+          ref="saveTagInput"
+          size="small"
+          @blur="handleInputConfirm"
+        ></el-input>
+        <el-tag v-else @click="handleClose" effect="plain">
+          {{ formName.label }}
+        </el-tag>
+      </div>
     </div>
     <div style="max-width: 960px">
       <div style="position: fixed; top: 5%; left: 5%">
@@ -37,11 +43,14 @@
         ></el-button>
       </div>
       <div>
+        <p>
+          {{ formName.description }}
+        </p>
         <el-divider></el-divider>
-        <div class="markdown-body" v-html="content"></div>
+        <div class="markdown-body" v-html="formName.content"></div>
       </div>
     </div>
-      <el-backtop target=""></el-backtop>
+    <el-backtop target=""></el-backtop>
   </div>
 </template>
 
@@ -58,12 +67,27 @@ export default {
   data() {
     //这里存放数据
     return {
-      id: "",
-      content: "",
-      title: "",
       loading: true,
-      status: "",
+      inputVisible: false,
+      formName: {
+        id: "",
+        content: "",
+        title: "",
+        status: "",
+        label: "",
+        description: "",
+      },
     };
+  },
+  directives: {
+    //注册一个局部的自定义指令 v-focus
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        // 聚焦元素
+        el.querySelector("input").focus();
+      },
+    },
   },
   //监听属性 类似于data概念
   computed: {
@@ -132,41 +156,73 @@ export default {
         });
       }
     },
+    handleClose() {
+      this.inputVisible = true;
+    },
+    handleInputConfirm() {
+      this.inputVisible = false;
+      this.editlabel();
+    },
+    //修改标签
+    editlabel() {
+      let data = JSON.stringify(this.formName);
+
+      this.$axios
+        .post("/blog/fix", data, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        })
+        .then((res) => {
+          // console.log(this.ruleForm);
+          if (res.data.code == 200) {
+            this.frist();
+          }
+        });
+    },
+    //chushi
+    frist() {
+      // console.log(this.userInfo.status);
+      // console.log(this.$route.params.blogid);
+      let url = "http://localhost:8081/blog/";
+      let id = this.$route.params.blogid;
+      this.id = id;
+      this.$axios
+        .get(url + id)
+        .then((res) => {
+          const { code, data } = res.data;
+
+          if (code == 200) {
+            // this.content = data.content;
+            // this.content = data.content.replace(/\\n/gm, "<br/>");
+            this.formName.id = data.id;
+            this.formName.title = data.title;
+            this.formName.status = data.status;
+            this.formName.label = data.label;
+            this.formName.description = data.description;
+            this.loading = false;
+            var MardownIt = require("markdown-it");
+            var md = new MardownIt();
+
+            var result = md.render(data.content);
+            this.formName.content = result;
+          } else {
+            this.$message({
+              message: res.data.msg,
+              center: true,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    // console.log(this.userInfo.status);
-    // console.log(this.$route.params.blogid);
-    let url = "http://localhost:8081/blog/";
-    let id = this.$route.params.blogid;
-    this.id = id;
-    this.$axios
-      .get(url + id)
-      .then((res) => {
-        const { code, data } = res.data;
-
-        if (code == 200) {
-          // this.content = data.content;
-          // this.content = data.content.replace(/\\n/gm, "<br/>");
-          this.title = data.title;
-          this.status = data.status;
-          this.loading = false;
-          var MardownIt = require("markdown-it");
-          var md = new MardownIt();
-
-          var result = md.render(data.content);
-          this.content = result;
-        } else {
-          this.$message({
-            message: res.data.msg,
-            center: true,
-            type: "error",
-          });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    this.frist();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -190,12 +246,33 @@ export default {
 .top {
   display: flex;
   padding: 10px;
-  width: 80%;
+  // width: 80%;
+  min-width: 960px;
+  align-items: center;
 }
 .mblog {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   width: 100%;
   min-height: 700px;
   padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>

@@ -68,6 +68,7 @@ export default {
       pagesize: 5, //每页显示条目个数
       data: {}, //数据
       loading: true,
+      title: "",
     };
   },
   //监听属性 类似于data概念
@@ -77,10 +78,12 @@ export default {
   //方法集合
   methods: {
     pages(page) {
-      let url = "http://localhost:8081/blogs/?currentPage=";
+      let url = `http://localhost:8081/blogs/?currentPage=${page}&value=${
+        this.title || ""
+      }`;
 
       this.$axios
-        .get(url + page)
+        .get(url)
         .then((res) => {
           // console.log(res);
           if (res.data.code == 200) {
@@ -109,26 +112,28 @@ export default {
     },
     updateData(msg) {
       var self = this;
-      if (msg.data.code == 200) {
-        self.data = msg.data.data;
-        self.total = msg.data.data.length;
-        self.loading = false;
-      } else {
-        this.$message({
-          message: msg.data.msg,
-          showClose: true,
-          type: "error",
-        });
-        const loading = this.$loading({
-          lock: true,
-          text: "Loading",
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)",
-        });
-        setTimeout(() => {
-          loading.close();
-        }, 2000);
-      }
+      self.title = msg;
+      self.pages(1);
+      // if (msg.data.code == 200) {
+      //   self.data = msg.data.data;
+      //   self.total = msg.data.data.length;
+      //   self.loading = false;
+      // } else {
+      //   this.$message({
+      //     message: msg.data.msg,
+      //     showClose: true,
+      //     type: "error",
+      //   });
+      //   const loading = this.$loading({
+      //     lock: true,
+      //     text: "Loading",
+      //     spinner: "el-icon-loading",
+      //     background: "rgba(0, 0, 0, 0.7)",
+      //   });
+      //   setTimeout(() => {
+      //     loading.close();
+      //   }, 2000);
+      // }
     },
     //动态加载script
     scriptinit() {
@@ -136,7 +141,7 @@ export default {
       let script = document.getElementById("gaodeMapScript");
       if (!script) {
         let link = document.createElement("link");
-        link.id='links'
+        link.id = "links";
         link.href =
           "https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css";
         link.rel = "stylesheet";

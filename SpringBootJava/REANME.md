@@ -24,6 +24,13 @@
 ### 访问
 登录
 http://localhost:8081/login
+###  说明
+注意@RequiresAuthentication说明需要登录之后才能访问的接口
+@RequiresAuthentication
+放在接口处
+
+前端在请求头中 加入
+Authorization:jwt
 
 
 ### 项目结构

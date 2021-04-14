@@ -40,13 +40,23 @@ public class BlogController {
     UserService userService;
 
     @GetMapping("/blogs")
-    public Result blogs(Integer currentPage) {
+    public Result blogs(Integer currentPage, String value) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
         Page page = new Page(currentPage, 5);
-        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().orderByDesc("created"));
-//        System.out.println(pageData);
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("created");
+
+        if (value != null && value.length() != 0) {
+            queryWrapper.like("title", value);
+            List<Blog> Blogs = blogService.list(queryWrapper);
+            if (Blogs == null || Blogs.size() == 0) {
+                return Result.fail("没有数据！");
+            }
+        }
+
+        IPage pageData = blogService.page(page, queryWrapper);
         return Result.succ(pageData);
     }
 
@@ -56,18 +66,19 @@ public class BlogController {
         Assert.notNull(blog, "该博客已删除！");
         return Result.succ(blog);
     }
-/**
- * [com.example.entity.Blog]
- * @author Tu
- * @date 2021/3/16 10:25
- * @message 修改功能
- * @return com.example.common.lang.Result
- */
+
+    /**
+     * [com.example.entity.Blog]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/3/16 10:25
+     * @message 修改功能
+     * @RequiresAuthentication 需要登录后的放回token
+     */
     @RequiresAuthentication
     @PostMapping("/blog/edit")
     public Result edit(@Validated @RequestBody Blog blog) {
-        // System.out.println(blog.toString());
-        //System.out.println("输入中...");
         Blog temp = null;
         ;
         /**
@@ -99,28 +110,54 @@ public class BlogController {
         blogService.saveOrUpdate(temp);
         return Result.succ("操作成功", null);
     }
- /**
-  * [com.example.entity.Blog]
-  * @author Tu
-  * @date 2021/3/16 10:08
-  * @message 新增功能
-  * BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status"); 为曾
-  *  BeanUtil.copyProperties(blog, temp); 为改
-  *  新增功能要添加userID
-  *  上面的修改功能 注释掉useID
-  * @return com.example.common.lang.Result
-  */
-@PostMapping("/blog/add")
-public Result editadd(@Validated @RequestBody Blog blog) {
-    Blog temp = null;
-    temp = new Blog();
-    temp.setCreated(LocalDateTime.now());
-    temp.setUserId(ShiroUtil.getProfile().getId());
-    temp.setStatus(blog.getStatus());
-    BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
-    blogService.saveOrUpdate(temp);
-    return Result.succ("操作成功", null);
-}
+
+    /**
+     * [com.example.entity.Blog]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/4/14 15:30
+     * @message 根据id修改
+     *   blogService.saveOrUpdate(label);
+     *      this.blogService.updateById(label);
+     *      以上都支持修改一个是全修改
+     *      后一个是根据id修改
+     */
+    @RequiresAuthentication
+    @PostMapping("/blog/fix")
+    public Result fix(@Validated @RequestBody Blog blog) {
+
+        Blog label = blogService.getById(blog.getId());
+        label.setLabel(blog.getLabel());
+        blogService.saveOrUpdate(label);
+//        this.blogService.updateById(label);
+        return Result.succ("操作成功", label);
+    }
+
+    /**
+     * [com.example.entity.Blog]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/3/16 10:08
+     * @message 新增功能
+     * BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status"); 为曾
+     * BeanUtil.copyProperties(blog, temp); 为改
+     * 新增功能要添加userID
+     * 上面的修改功能 注释掉useID
+     */
+    @PostMapping("/blog/add")
+    public Result editadd(@Validated @RequestBody Blog blog) {
+        Blog temp = null;
+        temp = new Blog();
+        temp.setCreated(LocalDateTime.now());
+        temp.setUserId(ShiroUtil.getProfile().getId());
+        temp.setStatus(blog.getStatus());
+        BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
+        blogService.saveOrUpdate(temp);
+        return Result.succ("操作成功", null);
+    }
+
     /**
      * 删除功能
      *

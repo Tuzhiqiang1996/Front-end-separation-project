@@ -28,11 +28,19 @@ import java.io.IOException;
 
 
 @Component
-public class  JwtFilter extends AuthenticatingFilter {
+public class JwtFilter extends AuthenticatingFilter {
 
     @Autowired
     JwtUtils jwtUtils;
 
+    /**
+     * [javax.servlet.ServletRequest, javax.servlet.ServletResponse]
+     *
+     * @return org.apache.shiro.authc.AuthenticationToken
+     * @author Tu
+     * @date 2021/4/12 10:21
+     * @message 实现登录，我们需要生成我们自定义支持的JwtToken
+     */
     @Override
     protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
 
@@ -45,6 +53,15 @@ public class  JwtFilter extends AuthenticatingFilter {
         return new JwtToken(jwt);
     }
 
+    /**
+     * [javax.servlet.ServletRequest, javax.servlet.ServletResponse]
+     *
+     * @return boolean
+     * @author Tu
+     * @date 2021/4/12 10:21
+     * @message 拦截校验，当头部没有Authorization时候，我们直接通过，不需要自动登录；当带有的时候，
+     * 首先我们校验jwt的有效性，没问题我们就直接执行executeLogin方法实现自动登录
+     */
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
 
@@ -65,6 +82,14 @@ public class  JwtFilter extends AuthenticatingFilter {
         }
     }
 
+    /**
+     * [org.apache.shiro.authc.AuthenticationToken, org.apache.shiro.authc.AuthenticationException, javax.servlet.ServletRequest, javax.servlet.ServletResponse]
+     *
+     * @return boolean
+     * @author Tu
+     * @date 2021/4/12 10:22
+     * @message 登录异常时候进入的方法，我们直接把异常信息封装然后抛出
+     */
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
 
@@ -82,6 +107,15 @@ public class  JwtFilter extends AuthenticatingFilter {
         return false;
     }
 
+    /**
+     * [javax.servlet.ServletRequest, javax.servlet.ServletResponse]
+     *
+     * @return boolean
+     * @author Tu
+     * @date 2021/4/12 10:22
+     * @message 拦截器的前置拦截，因为我们是前后端分析项目，项目中除了需要跨域全局配置之外，
+     * 我们再拦截器中也需要提供跨域支持。这样，拦截器才不会在进入Controller之前就被限制了
+     */
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 

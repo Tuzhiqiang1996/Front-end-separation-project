@@ -39,6 +39,7 @@ export default {
   //方法集合
   methods: {
     btn() {
+      this.$emit("msgData", this.input);
       /**
        * 将得到的数据传递给index.vue 在组件中预留位置 接受兄弟组件的值
        */
@@ -47,7 +48,7 @@ export default {
         .get(url + this.input)
         .then((res) => {
           //   console.log(res);
-          this.$emit("msgData", res);
+          // this.$emit("msgData", res);
         })
         .catch((err) => {
           console.error(err);
