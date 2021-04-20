@@ -30,6 +30,6 @@ body {
   background-size:   100%;
 }
 html {
-  /* height: 100%; */
+  height: 100%;
 }
 </style>

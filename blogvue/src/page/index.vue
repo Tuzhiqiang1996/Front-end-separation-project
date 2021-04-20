@@ -69,6 +69,7 @@ export default {
       data: {}, //数据
       loading: true,
       title: "",
+      label:""
     };
   },
   //监听属性 类似于data概念
@@ -80,6 +81,8 @@ export default {
     pages(page) {
       let url = `http://localhost:8081/blogs/?currentPage=${page}&value=${
         this.title || ""
+      }&label=${
+        this.label || ""
       }`;
 
       this.$axios
@@ -112,7 +115,8 @@ export default {
     },
     updateData(msg) {
       var self = this;
-      self.title = msg;
+      self.title = msg.value;
+      self.label = msg.label;
       self.pages(1);
       // if (msg.data.code == 200) {
       //   self.data = msg.data.data;

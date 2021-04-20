@@ -46,11 +46,127 @@
         <p>
           {{ formName.description }}
         </p>
-        <el-divider></el-divider>
+        <el-divider style="max-width: 960px"></el-divider>
         <div class="markdown-body" v-html="formName.content"></div>
       </div>
     </div>
     <el-backtop target=""></el-backtop>
+
+    <div class="bottombox">
+      <div class="botcontent">
+        <el-button @click="zan" type="text">
+          <svg
+            v-show="iszan"
+            t="1618903754460"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="1894"
+            width="16"
+            height="16"
+          >
+            <path
+              d="M884.875894 423.143253L646.970506 423.143253c92.185562-340.464205-63.516616-357.853247-63.516616-357.853247-65.993017 0-52.312436 52.182476-57.3031 60.881602 0 166.502152-176.849824 296.971645-176.849824 296.971645l0 472.171899c0 46.607504 63.516616 63.393819 88.433098 63.393819l357.452111 0c33.641191 0 61.036122-88.224344 61.036122-88.224344 88.434122-300.70569 88.434122-390.177444 88.434122-390.177444C944.657442 418.179195 884.875894 423.143253 884.875894 423.143253L884.875894 423.143253 884.875894 423.143253zM884.875894 423.143253"
+              fill="#d81e06"
+              p-id="1895"
+            ></path>
+            <path
+              d="M251.671415 423.299819L109.214912 423.299819c-29.420053 0-29.873378 28.89612-29.873378 28.89612l29.420053 476.202703c0 30.309306 30.361495 30.309306 30.361495 30.309306L262.420223 958.707948c25.686009 0 25.458835-20.049638 25.458835-20.049638L287.879058 459.411271C287.879058 422.837284 251.671415 423.299819 251.671415 423.299819L251.671415 423.299819 251.671415 423.299819zM251.671415 423.299819"
+              fill="#d81e06"
+              p-id="1896"
+            ></path>
+          </svg>
+          <svg
+            t="1618903754460"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="1894"
+            width="16"
+            height="16"
+            v-show="!iszan"
+          >
+            <path
+              d="M884.875894 423.143253L646.970506 423.143253c92.185562-340.464205-63.516616-357.853247-63.516616-357.853247-65.993017 0-52.312436 52.182476-57.3031 60.881602 0 166.502152-176.849824 296.971645-176.849824 296.971645l0 472.171899c0 46.607504 63.516616 63.393819 88.433098 63.393819l357.452111 0c33.641191 0 61.036122-88.224344 61.036122-88.224344 88.434122-300.70569 88.434122-390.177444 88.434122-390.177444C944.657442 418.179195 884.875894 423.143253 884.875894 423.143253L884.875894 423.143253 884.875894 423.143253zM884.875894 423.143253"
+              fill="#bfbfbf"
+              p-id="1895"
+            ></path>
+            <path
+              d="M251.671415 423.299819L109.214912 423.299819c-29.420053 0-29.873378 28.89612-29.873378 28.89612l29.420053 476.202703c0 30.309306 30.361495 30.309306 30.361495 30.309306L262.420223 958.707948c25.686009 0 25.458835-20.049638 25.458835-20.049638L287.879058 459.411271C287.879058 422.837284 251.671415 423.299819 251.671415 423.299819L251.671415 423.299819 251.671415 423.299819zM251.671415 423.299819"
+              fill="#bfbfbf"
+              p-id="1896"
+            ></path>
+          </svg><span>12</span>
+        </el-button>
+
+        <el-button @click="comment" type="text">
+
+          <svg
+            t="1618903837663"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="2777"
+            width="20"
+            height="20"
+          >
+            <path
+              d="M949.570625 207.6734375l-41.80125 41.518125L768.565625 110.84375l41.80125-41.46c15.3403125-15.283125 39.52125-16.08375 53.8921875-1.768125l87.0234375 86.454375c14.428125 14.3128125 13.6284375 38.3240625-1.711875 53.6034375z m-369.196875 366.920625L441.1690625 436.244375l306.238125-304.299375L886.61375 270.29375 580.3728125 574.5940625z m-19.389375 19.275L366.12125 649.184375l55.659375-193.666875L560.984375 593.8690625z m-324.433125-420.75c-48.13125 0-87.080625 38.9484375-87.080625 87.0234375V782.515625c0 48.0628125 38.9625 87.02625 87.0253125 87.02625h522.4865625c48.06375 0 87.028125-38.9625 87.028125-87.028125V434.2484375l87.07875-87.028125V811.540625c0 80.1253125-64.9546875 145.078125-145.078125 145.078125H207.468125c-80.124375 0-145.078125-64.95375-145.078125-145.078125V231.115625c0-80.1253125 64.9546875-145.078125 145.078125-145.078125h464.435625l-87.0834375 87.0834375H236.55125v-0.0009375z"
+              fill="#0997F7"
+              p-id="2778"
+            ></path>
+          </svg><span>12</span>
+        </el-button>
+
+        <el-button   type="text">
+        <svg
+          t="1618913171466"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="8235"
+          width="16"
+          height="16"
+        >
+          <path
+            d="M231.819636 293.143273h-63.534545A63.557818 63.557818 0 0 0 104.727273 356.701091V960.465455A63.557818 63.557818 0 0 0 168.285091 1024h63.534545a63.557818 63.557818 0 0 0 63.557819-63.534545V356.701091a63.534545 63.534545 0 0 0-63.557819-63.557818zM549.585455 7.168h-63.534546a63.557818 63.557818 0 0 0-63.557818 63.557818V960.465455A63.534545 63.534545 0 0 0 486.050909 1024h63.534546a63.534545 63.534545 0 0 0 63.534545-63.534545V70.725818a63.534545 63.534545 0 0 0-63.534545-63.557818zM867.374545 515.584h-63.557818a63.534545 63.534545 0 0 0-63.534545 63.557818V960.465455a63.534545 63.534545 0 0 0 63.534545 63.534545h63.557818A63.534545 63.534545 0 0 0 930.909091 960.465455V579.141818a63.557818 63.557818 0 0 0-63.534546-63.557818z"
+            fill="#0997F7"
+            p-id="8236"
+          ></path>
+        </svg>
+        <span>{{readynum}}</span></el-button>
+      </div>
+      <div class="contentcom">
+        <el-collapse-transition>
+          <div v-show="iscontent">
+            <div class="savebox">
+              <el-input
+                type="textarea"
+                placeholder="请输入内容"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                v-model="textarea"
+                maxlength="500"
+                show-word-limit
+              >
+              </el-input>
+              <el-button style="margin: 0 0 0 10px" type="danger"
+                >提交</el-button
+              >
+            </div>
+            <div>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nesciunt
+              vero minima temporibus rerum quo totam aliquid numquam vel
+              voluptatem cum harum, iste consequatur tempore excepturi illum
+              exercitationem. Blanditiis, modi alias?
+            </div>
+          </div>
+        </el-collapse-transition>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -69,6 +185,8 @@ export default {
     return {
       loading: true,
       inputVisible: false,
+      iscontent: false,
+      iszan: false,
       formName: {
         id: "",
         content: "",
@@ -76,7 +194,10 @@ export default {
         status: "",
         label: "",
         description: "",
+        activeName: "1",
       },
+      textarea: "",
+      readynum:0
     };
   },
   directives: {
@@ -201,6 +322,7 @@ export default {
             this.formName.status = data.status;
             this.formName.label = data.label;
             this.formName.description = data.description;
+            this.readynum=data.readyNumber
             this.loading = false;
             var MardownIt = require("markdown-it");
             var md = new MardownIt();
@@ -218,6 +340,15 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    handleChange(e) {
+      console.log(e);
+    },
+    zan() {
+      this.iszan = !this.iszan;
+    },
+    comment() {
+      this.iscontent = !this.iscontent;
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -259,6 +390,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  // height: 100%;
 }
 .el-tag + .el-tag {
   margin-left: 10px;
@@ -274,5 +406,22 @@ export default {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
+}
+.bottombox {
+  max-width: 960px;
+}
+.botcontent {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.contentcom {
+  height: 100%;
+  margin-top: 20px;
+}
+.savebox {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
 </style>

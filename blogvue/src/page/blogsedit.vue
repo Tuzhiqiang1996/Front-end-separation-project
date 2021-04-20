@@ -55,6 +55,7 @@ export default {
         content: "",
         status: "",
         label: "",
+        userId:""
       },
       rules: {
         title: [
@@ -120,6 +121,7 @@ export default {
     const blogId = this.$route.params.blogId;
     //将当前的的用户权限传给status
     this.ruleForm.status = this.userInfo.status;
+    this.ruleForm.userId = this.userInfo.id;
     console.log(this.$route.params);
     const _this = this;
     if (blogId) {

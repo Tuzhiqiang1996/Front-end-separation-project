@@ -95,12 +95,12 @@ public class AccountController {
      * 3/15 出现错误情况 无法注册 获取不到前端的返回值
      * 将 LoginDto loginDto 修改成 User user
      * 下方 修改
-     *  User user1 = userService.getOne(new QueryWrapper<User>().eq("userName", user.getUsername()));
-     *
-     *         if (user1 != null) {
-     *             System.out.println(user);
-     *             return Result.fail("用户已存在");
-     *         }
+     * User user1 = userService.getOne(new QueryWrapper<User>().eq("userName", user.getUsername()));
+     * <p>
+     * if (user1 != null) {
+     * System.out.println(user);
+     * return Result.fail("用户已存在");
+     * }
      */
     @ResponseBody
     @PostMapping("/regina")
@@ -188,6 +188,7 @@ public class AccountController {
         userService.removeById(userid);
         return Result.succ("删除成功", null);
     }
+
     /**
      * [com.example.entity.User]
      *
@@ -257,5 +258,21 @@ public class AccountController {
         JSONObject jsonObject = new JSONObject(dd);//可以将json格式的字符串变成json对象
         jsonObject.remove("password");//过滤的值
         return Result.succ("修改成功!", jsonObject);
+    }
+
+    /**
+     * [java.lang.Integer]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/4/20 14:46
+     * @message 根据id 获取用户信息
+     * http://localhost:8081/getId?id=1
+     */
+    @GetMapping("/getId")
+    public Result getId(Integer id) {
+        User dd = userService.getById(id);
+        dd.setPassword("已隐藏");
+        return Result.succ("操作成功！", dd);
     }
 }

@@ -4,7 +4,7 @@
     <div style="width: 330px; text-align: center">
       <div class="search">
         <el-input
-          v-model="input"
+          v-model="input.value"
           placeholder="请输入内容"
           clearable
           style="width: 200px"
@@ -12,6 +12,40 @@
         <el-button @click="btn" type="primary" plain>搜素</el-button>
       </div>
       <el-calendar v-model="value"> </el-calendar>
+      <div>
+        <el-carousel
+          trigger="click"
+          height="150px"
+          ref="carousel"
+          indicator-position="none"
+          @change="
+            (pre, next) => {
+              change(pre, next);
+            }
+          "
+          :autoplay="false"
+        >
+          <el-carousel-item
+            v-for="item in pages"
+            :key="item"
+            class="carouselbox"
+          >
+            <div v-for="items in data" :key="items.id" class="cardiv">
+              <el-tag
+                v-if="items.label"
+                effect="plain"
+                @click="tag(items.label)"
+                :color="'#' + Math.floor(Math.random() * 0xffffff).toString(16)"
+              >
+                {{ items.label }}
+              </el-tag>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div>
+        <p>666</p>
+      </div>
     </div>
   </div>
 </template>
@@ -28,8 +62,12 @@ export default {
     //这里存放数据
     return {
       value: new Date(),
-      input: "",
-      data: {},
+      input: {
+        value: "",
+        label: "",
+      },
+      data: [],
+      pages: 1,
     };
   },
   //监听属性 类似于data概念
@@ -43,20 +81,53 @@ export default {
       /**
        * 将得到的数据传递给index.vue 在组件中预留位置 接受兄弟组件的值
        */
-      let url = "/search?value=";
+    },
+
+    change(pre, next) {
+      // 当前页  上一页
+
+      let num = pre + 1;
+      this.page(num);
+      console.log(num);
+    },
+    /**
+     *  标签
+     */
+    page(num) {
+      let url = `http://localhost:8081/blogs/?currentPage=${num}`;
+
       this.$axios
-        .get(url + this.input)
+        .get(url)
         .then((res) => {
-          //   console.log(res);
-          // this.$emit("msgData", res);
+          if (res.data.code == 200) {
+            this.data = res.data.data.records;
+            this.pages = res.data.data.pages;
+          } else {
+            this.$message({
+              message: res.data.msg,
+              showClose: true,
+              type: "error",
+            });
+          }
         })
         .catch((err) => {
           console.error(err);
+          this.$message({
+            message: res.data.msg,
+            showClose: true,
+            type: "error",
+          });
         });
+    },
+    tag(e) {
+      this.input.label = e;
+      this.btn();
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.page(1);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
@@ -73,5 +144,16 @@ export default {
 .search {
   display: flex;
   justify-content: space-evenly;
+}
+.taglabel {
+  color: #000;
+}
+.carouselbox {
+  // display: flex;
+  // justify-content: center;
+}
+.cardiv {
+  float: left;
+  padding: 15px;
 }
 </style>

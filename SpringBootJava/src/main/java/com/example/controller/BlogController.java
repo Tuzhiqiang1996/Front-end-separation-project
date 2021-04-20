@@ -2,6 +2,8 @@ package com.example.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.dto.LoginDto;
@@ -39,8 +41,16 @@ public class BlogController {
     @Autowired
     UserService userService;
 
+    /**
+     * [java.lang.Integer, java.lang.String]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/4/19 17:28
+     * @message 同时带条件查询，
+     */
     @GetMapping("/blogs")
-    public Result blogs(Integer currentPage, String value) {
+    public Result blogs(Integer currentPage, String value, String label) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
@@ -50,12 +60,14 @@ public class BlogController {
 
         if (value != null && value.length() != 0) {
             queryWrapper.like("title", value);
-            List<Blog> Blogs = blogService.list(queryWrapper);
-            if (Blogs == null || Blogs.size() == 0) {
-                return Result.fail("没有数据！");
-            }
         }
-
+        if (label != null && label.length() != 0) {
+            queryWrapper.like("label", label);
+        }
+        List<Blog> Blogs = blogService.list(queryWrapper);
+        if (Blogs == null || Blogs.size() == 0) {
+            return Result.fail("没有数据！");
+        }
         IPage pageData = blogService.page(page, queryWrapper);
         return Result.succ(pageData);
     }
@@ -64,6 +76,10 @@ public class BlogController {
     public Result detail(@PathVariable(name = "id") Long id) {
         Blog blog = blogService.getById(id);
         Assert.notNull(blog, "该博客已删除！");
+        blog.setReadyNumber(blog.getReadyNumber()+1);
+        System.out.println(blog.getReadyNumber()+1);
+        System.out.println(blog);
+        blogService.saveOrUpdate(blog);
         return Result.succ(blog);
     }
 
@@ -118,10 +134,10 @@ public class BlogController {
      * @author Tu
      * @date 2021/4/14 15:30
      * @message 根据id修改
-     *   blogService.saveOrUpdate(label);
-     *      this.blogService.updateById(label);
-     *      以上都支持修改一个是全修改
-     *      后一个是根据id修改
+     * blogService.saveOrUpdate(label);
+     * this.blogService.updateById(label);
+     * 以上都支持修改一个是全修改
+     * 后一个是根据id修改
      */
     @RequiresAuthentication
     @PostMapping("/blog/fix")
@@ -145,13 +161,14 @@ public class BlogController {
      * BeanUtil.copyProperties(blog, temp); 为改
      * 新增功能要添加userID
      * 上面的修改功能 注释掉useID
+     * userID 对应用户id
      */
     @PostMapping("/blog/add")
     public Result editadd(@Validated @RequestBody Blog blog) {
         Blog temp = null;
         temp = new Blog();
         temp.setCreated(LocalDateTime.now());
-        temp.setUserId(ShiroUtil.getProfile().getId());
+        temp.setUserId(blog.getUserId());
         temp.setStatus(blog.getStatus());
         BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
         blogService.saveOrUpdate(temp);
@@ -180,9 +197,9 @@ public class BlogController {
 
 
         Blog blog = blogService.getById(id);
-        System.out.println(blog.getStatus());
-        System.out.println(id);
-        System.out.println(blog);
+//        System.out.println(blog.getStatus());
+//        System.out.println(id);
+//        System.out.println(blog);
 
         //blogService.delete(id);
 
@@ -232,6 +249,21 @@ public class BlogController {
         return Result.succ("1");
     }
 
-
+    @GetMapping("/getLabel")
+    public Result getLabel() {
+        Page page = new Page(1, 10);
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("created");
+        IPage pageData = blogService.page(page, queryWrapper);
+        JSONObject jsonObject = new JSONObject(pageData);
+        JSONArray jsonArray = (JSONArray) jsonObject.get("records");
+        JSONObject jsonData = new JSONObject();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            jsonData = (JSONObject) jsonArray.get(i);
+            jsonData.get("label");
+//            System.out.println(jsonData);
+        }
+        return Result.succ("", jsonData);
+    }
 }
 
