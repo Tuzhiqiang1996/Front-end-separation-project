@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -41,6 +42,19 @@ public class Cominfo implements Serializable {
     //''评论者id''
 
     private Integer fromId;
+    //'被评论者头像'
+
+    private String toAvatar;
+
+    //被评论者名字
+
+    private String toName;
+    //''被评论者id''
+
+    private Integer toId;
+    //对父级评论id
+
+    private Integer commentid;
 
     //''被评论者-id，可以是人、项目、资源'
 
@@ -54,6 +68,7 @@ public class Cominfo implements Serializable {
     private Integer likeNum;
 
     @NotBlank(message = "内容不能为空")
+    @NotNull
     private String content;
 
     @JsonFormat(pattern = "yyyy-MM-dd")

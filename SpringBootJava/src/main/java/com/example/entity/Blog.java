@@ -48,5 +48,6 @@ public class Blog implements Serializable {
     private Integer status;
     private String label;
     private Integer readyNumber;
-
+    private Integer getlike;
+    private Integer comments;
 }

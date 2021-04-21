@@ -10,7 +10,9 @@ import com.example.common.dto.LoginDto;
 import com.example.common.lang.Result;
 import com.example.entity.Blog;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.entity.Cominfo;
 import com.example.service.BlogService;
+import com.example.service.CominfoService;
 import com.example.service.UserService;
 import com.example.util.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -40,6 +42,9 @@ public class BlogController {
     BlogService blogService;
     @Autowired
     UserService userService;
+
+    @Autowired
+    CominfoService cominfoService;
 
     /**
      * [java.lang.Integer, java.lang.String]
@@ -72,13 +77,26 @@ public class BlogController {
         return Result.succ(pageData);
     }
 
+    /**
+     * [java.lang.Long]
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/4/21 9:39
+     * @message 根据id获取文章
+     */
     @GetMapping("/blog/{id}")
     public Result detail(@PathVariable(name = "id") Long id) {
         Blog blog = blogService.getById(id);
         Assert.notNull(blog, "该博客已删除！");
-        blog.setReadyNumber(blog.getReadyNumber()+1);
-        System.out.println(blog.getReadyNumber()+1);
-        System.out.println(blog);
+        blog.setReadyNumber(blog.getReadyNumber() + 1);
+        QueryWrapper<Cominfo> queryWrapper = new QueryWrapper();
+        queryWrapper.like("owner_id", id);
+        List<Cominfo> cominfos = cominfoService.list(queryWrapper);
+        blog.setComments(cominfos.size());
+
+//        System.out.println(blog.getReadyNumber()+1);
+//        System.out.println(cominfos.size());
         blogService.saveOrUpdate(blog);
         return Result.succ(blog);
     }
@@ -96,7 +114,7 @@ public class BlogController {
     @PostMapping("/blog/edit")
     public Result edit(@Validated @RequestBody Blog blog) {
         Blog temp = null;
-        ;
+
         /**
          * @date 2021/2/21-11:37
          * 不知道声明错
@@ -133,7 +151,7 @@ public class BlogController {
      * @return com.example.common.lang.Result
      * @author Tu
      * @date 2021/4/14 15:30
-     * @message 根据id修改
+     * @message 根据id修改 标签
      * blogService.saveOrUpdate(label);
      * this.blogService.updateById(label);
      * 以上都支持修改一个是全修改
@@ -145,6 +163,7 @@ public class BlogController {
 
         Blog label = blogService.getById(blog.getId());
         label.setLabel(blog.getLabel());
+        label.setCreated(LocalDateTime.now());
         blogService.saveOrUpdate(label);
 //        this.blogService.updateById(label);
         return Result.succ("操作成功", label);
@@ -188,12 +207,12 @@ public class BlogController {
     public Result deleteBlog(@PathVariable(name = "id") Long id, HttpServletRequest request, LoginDto loginDto) {
 
 
-/**
- * 想要获取哪个用户操作的
- * 下文
- * 可以有前端传一个参数 status 与当前  blog.getStatus()对比
- * 前端已做
- */
+        /**
+         * 想要获取哪个用户操作的
+         * 下文
+         * 可以有前端传一个参数 status 与当前  blog.getStatus()对比
+         * 前端已做
+         */
 
 
         Blog blog = blogService.getById(id);
@@ -249,21 +268,35 @@ public class BlogController {
         return Result.succ("1");
     }
 
-    @GetMapping("/getLabel")
-    public Result getLabel() {
-        Page page = new Page(1, 10);
-        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("created");
-        IPage pageData = blogService.page(page, queryWrapper);
-        JSONObject jsonObject = new JSONObject(pageData);
-        JSONArray jsonArray = (JSONArray) jsonObject.get("records");
-        JSONObject jsonData = new JSONObject();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            jsonData = (JSONObject) jsonArray.get(i);
-            jsonData.get("label");
-//            System.out.println(jsonData);
+    /**
+     * []
+     *
+     * @return com.example.common.lang.Result
+     * @author Tu
+     * @date 2021/4/21 14:18
+     * @message 0.0
+     * 评论数 点赞数  +   -  文章id commid
+     * 1      2     3   4
+     */
+    @GetMapping("/getzpnum")
+    public Result getnum(Integer typeid, Integer num, Integer commid) {
+        Blog blog = blogService.getById(commid);
+//        if (typeid == 1) {
+//            if (num == 3) {
+//                blog.setComments(blog.getComments() + 1);
+//            } else {
+//                blog.setComments(blog.getComments() - 1);
+//            }
+//        }
+        if (typeid == 2) {
+            if (num == 3) {
+                blog.setGetlike(blog.getGetlike() + 1);
+            } else {
+                blog.setGetlike(blog.getGetlike() - 1);
+            }
         }
-        return Result.succ("", jsonData);
+        blogService.saveOrUpdate(blog);
+        return Result.succ("success",blog);
     }
 }
 
