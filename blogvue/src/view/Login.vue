@@ -77,6 +77,7 @@
               :disabled="isLoginAble"
               @click="login('ruleForm')"
               v-if="log"
+              :loading="islogin"
             >
               立即登录
             </el-button>
@@ -86,6 +87,7 @@
               class="loginBtn"
               :disabled="isLoginAble"
               @click="regina('ruleForm')"
+              :loading="isregina"
             >
               注册
             </el-button>
@@ -147,6 +149,8 @@ export default {
       }
     };
     return {
+      islogin:false,
+      isregina:false,
       radio: "1",
       radioimg: 1,
       log: true,
@@ -199,6 +203,7 @@ export default {
   },
   methods: {
     login(formName) {
+      this.islogin=true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           //正确的账号: doudou  密码:123456
@@ -229,6 +234,7 @@ export default {
                   showClose: true,
                   type: "success",
                 });
+                this.islogin=false
               } else {
                 this.$message({
                   message: res.data.msg,
@@ -248,11 +254,10 @@ export default {
     },
     ...mapMutations({ SET_TOKEN: "SET_TOKEN", SET_USERINFO: "SET_USERINFO" }),
     regina(ruleForm) {
-      console.log(666)
+      this.isregina=true
       this.$refs[ruleForm].validate((valid) => {
-        console.log(661)
+
         if (valid) {
-          console.log(662)
           let options = {
             username: this.ruleForm.userName,
             password: this.ruleForm.userPwd,
@@ -276,6 +281,7 @@ export default {
                   showClose: true,
                   type: "success",
                 });
+                  this.isregina=false
               }
                 this.$message({
                   message: res.data.msg,
