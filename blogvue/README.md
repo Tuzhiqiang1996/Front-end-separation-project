@@ -201,3 +201,48 @@ redis-server.exe
 cnpm install mavon-editor --save
 ## 用于解析md文档
 cnpm install markdown-it --save
+
+
+### 技术☞列表操作 -点赞
+ vue中
+ ```
+ 在 data中申明一个空数组用来存放 我们操作过的值
+ data:{
+   list:[],
+   datalist:[]
+ }
+ 因为在循环列表中 存在唯一的id
+ v-for    item,index  key=item.id
+ 所以当我们去操作列表中的 一个值的时候
+ @click='add(item)'
+div  :size=haszan(item.id)  标签中用来判断
+
+ add(data,index){
+let id = data.id;
+//判断点击的id 是否存在数组中
+let indexnum = this.list.indexOf(id);
+    if (indexnum > -1) {
+      //存在 就去掉
+        this.list.splice(indexnum, 1);
+        //实时对数量加减
+        this.list[index].likeNum -= 1;
+      } else {
+        //实时对数量加减 通过index 下标
+         this.list[index].likeNum += 1;
+        不存在就 push到数组中
+        this.list.push(id);
+      }
+ }
+
+ //写一个 函数来判断
+  haszan(id) {
+      const set = new Set(this.list); //去重
+      if (set.has(id)) { 存在数组中
+        return true;
+      } else {
+        return false;
+      }
+    },
+参考 //https://www.cnblogs.com/clsl/p/12950791.html
+https://blog.csdn.net/qq_38594056/article/details/108892439
+ ```

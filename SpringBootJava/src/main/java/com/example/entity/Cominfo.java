@@ -30,7 +30,7 @@ public class Cominfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Integer id;  //原来 long
 
     //'评论者头像'
 
@@ -42,19 +42,6 @@ public class Cominfo implements Serializable {
     //''评论者id''
 
     private Integer fromId;
-    //'被评论者头像'
-
-    private String toAvatar;
-
-    //被评论者名字
-
-    private String toName;
-    //''被评论者id''
-
-    private Integer toId;
-    //对父级评论id
-
-    private Integer commentid;
 
     //''被评论者-id，可以是人、项目、资源'
 

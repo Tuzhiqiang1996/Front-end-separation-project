@@ -15,6 +15,7 @@ import com.example.service.BlogService;
 import com.example.service.CominfoService;
 import com.example.service.UserService;
 import com.example.util.ShiroUtil;
+import lombok.Data;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +37,7 @@ import java.util.List;
  * @Controller
  * @since 2021-01-29
  */
+@Data
 @RestController
 public class BlogController {
     @Autowired

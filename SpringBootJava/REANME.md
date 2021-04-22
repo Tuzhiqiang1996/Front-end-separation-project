@@ -66,3 +66,5 @@ resources
           
           
 ```
+评论表与回复表
+id   --->  commentid
