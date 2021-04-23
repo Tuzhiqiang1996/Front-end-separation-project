@@ -41,7 +41,7 @@
                 >{{ item.fromName }}：</span
               >
               <span style="color: #606266; vertical-align: super">{{
-                item.createTime
+                GetDateDiff(item.createTime)
               }}</span>
               <!-- 一级回复 -->
               <el-button
@@ -114,7 +114,8 @@
                         replist.content
                       }}</span>
                       <span style="color: #606266; vertical-align: super">{{
-                        replist.createTime.split("T")[0]
+
+                        GetDateDiff(replist.createTime)
                       }}</span>
                       <!-- 对第一个人的回复 -->
                       <el-button
@@ -249,6 +250,17 @@
               </el-collapse>
             </div>
           </div>
+        <div style="text-align: center; padding: 20px 0">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            :current-page="currentpage"
+            :page-size="pagesize"
+            @current-change="getcommentlist"
+            background
+          >
+          </el-pagination>
+        </div>
         </div>
       </el-collapse-transition>
     </div>
@@ -259,14 +271,18 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import { mapState } from "vuex";
+import {GetDateDiff} from '../utils/gettime'
 export default {
   name: "",
   //import引入的组件需要注入到对象中才能使用
   components: {},
-  props: ['iscontens'],
+  props: ["iscontens"],
   data() {
     //这里存放数据
     return {
+      total: 0, //总条目数
+      currentpage: 1, //当前页数
+      pagesize: 5, //每页显示条目个数
       loading: true,
       inputVisible: false,
       iszan: false,
@@ -308,6 +324,7 @@ export default {
         commentId2: "",
       },
       replyinput: {},
+      idtrue:this.iscontens
     };
   },
   //监听属性 类似于data概念
@@ -318,7 +335,6 @@ export default {
   watch: {},
   //方法集合
   methods: {
-
     //赞 评论
     likecomments(num1, num2) {
       let blogid = this.blogId;
@@ -363,7 +379,8 @@ export default {
           .then((res) => {
             if (res.data.code == 200) {
               this.content = "";
-              this.getcommentlist(this.blogId, 1);
+              this.getcommentlist(1);
+              // this.getcommentlist(this.blogId, 1);
               // this.likecomments(1, 3);
             }
           })
@@ -381,21 +398,28 @@ export default {
     /**
      * 获取该文章id下的评论
      */
-    getcommentlist(id, typeid) {
-      let url = `http://localhost:8081/getcom?ownerId=${id}&typeid=${typeid}`;
+    // getcommentlist(id, typeid,page) {
+    getcommentlist(page) {
+      let url = `http://localhost:8081/getcom?ownerId=${
+        this.blogId
+      }&typeid=${1}&currentPage=${page}`;
 
       this.$axios
         .get(url)
         .then((res) => {
           if (res.data.code == 200) {
-            this.comlist = res.data.data;
-            // console.log(this.comlist);
+            this.total = res.data.data.total;
+            this.currentpage = res.data.data.current;
+            this.pagesize = res.data.data.size;
+            this.comlist = res.data.data.records;
+            console.log(this.comlist);
             // this.frist();
           }
         })
         .catch((err) => {
           console.error(err);
         });
+
     },
 
     //获取二级回复
@@ -585,9 +609,8 @@ export default {
     this.useravatar = this.userInfo.avatar;
     this.usernames = this.userInfo.username;
     this.userids = this.userInfo.id;
-    // console.log('e',this.blogId);
-    this.getcommentlist(this.blogId, 1);
-
+    this.getcommentlist(1);
+    // this.getcommentlist(this.blogId, 1);
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

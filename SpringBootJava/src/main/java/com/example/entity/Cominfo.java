@@ -58,7 +58,7 @@ public class Cominfo implements Serializable {
     @NotNull
     private String content;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 

@@ -361,7 +361,7 @@ export default {
     btncomment() {
       this.iscontent = !this.iscontent;
       this.show3 = !this.show3;
-      console.log(this.show3);
+      // console.log(this.show3);
     },
     //文章点赞
     likecomments(num1, num2) {
@@ -414,7 +414,7 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   width: 100%;
   min-height: 700px;
-  padding: 20px 15px;
+  // padding: 20px 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
