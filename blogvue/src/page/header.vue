@@ -82,7 +82,6 @@ export default {
                 script.remove();
                 link.remove();
                 waifu.remove();
-                console.log(2131);
               } else {
                 this.$message({
                   type: "error",

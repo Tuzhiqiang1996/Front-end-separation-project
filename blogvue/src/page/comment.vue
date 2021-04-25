@@ -41,7 +41,7 @@
                 >{{ item.fromName }}：</span
               >
               <span style="color: #606266; vertical-align: super">{{
-                GetDateDiff(item.createTime)
+                 Timediff(item.createTime)
               }}</span>
               <!-- 一级回复 -->
               <el-button
@@ -114,8 +114,7 @@
                         replist.content
                       }}</span>
                       <span style="color: #606266; vertical-align: super">{{
-
-                        GetDateDiff(replist.createTime)
+                         Timediff(replist.createTime)
                       }}</span>
                       <!-- 对第一个人的回复 -->
                       <el-button
@@ -250,17 +249,17 @@
               </el-collapse>
             </div>
           </div>
-        <div style="text-align: center; padding: 20px 0">
-          <el-pagination
-            layout="prev, pager, next"
-            :total="total"
-            :current-page="currentpage"
-            :page-size="pagesize"
-            @current-change="getcommentlist"
-            background
-          >
-          </el-pagination>
-        </div>
+          <div style="text-align: center; padding: 20px 0">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="total"
+              :current-page="currentpage"
+              :page-size="pagesize"
+              @current-change="getcommentlist"
+              background
+            >
+            </el-pagination>
+          </div>
         </div>
       </el-collapse-transition>
     </div>
@@ -271,7 +270,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import { mapState } from "vuex";
-import {GetDateDiff} from '../utils/gettime'
+import { GetDateDiff } from "../utils/gettime";
 export default {
   name: "",
   //import引入的组件需要注入到对象中才能使用
@@ -324,7 +323,7 @@ export default {
         commentId2: "",
       },
       replyinput: {},
-      idtrue:this.iscontens
+      idtrue: this.iscontens,
     };
   },
   //监听属性 类似于data概念
@@ -419,7 +418,6 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-
     },
 
     //获取二级回复
@@ -601,6 +599,10 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    //时间格式化
+    Timediff(gettime) {
+      return GetDateDiff(gettime);
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

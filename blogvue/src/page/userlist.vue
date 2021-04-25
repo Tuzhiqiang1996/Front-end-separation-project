@@ -6,7 +6,7 @@
       <el-table
         ref="filterTable"
         :data="tableData"
-        style="width: 100%;text-angle"
+        style="width: 100%; "
       >
         <el-table-column label="头像" width="100">
           <template slot-scope="scope">
